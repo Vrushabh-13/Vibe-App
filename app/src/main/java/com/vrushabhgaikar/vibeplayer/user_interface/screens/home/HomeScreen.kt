@@ -1,4 +1,4 @@
-package com.vrushabhgaikar.vibeplayer.user_interface.screens
+package com.vrushabhgaikar.vibeplayer.user_interface.screens.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,10 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.vrushabhgaikar.vibeplayer.user_interface.viewmodel.HomeViewModel
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()){
+fun HomeScreen(viewModel: HomeViewModel = viewModel()){
     LaunchedEffect(Unit) {
         viewModel.loadData()
     }
