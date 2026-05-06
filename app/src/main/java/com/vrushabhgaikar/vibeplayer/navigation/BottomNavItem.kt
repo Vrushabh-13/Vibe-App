@@ -1,8 +1,7 @@
 package com.vrushabhgaikar.vibeplayer.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composer
 import com.vrushabhgaikar.vibeplayer.R
 
 import okhttp3.Route
@@ -12,6 +11,7 @@ sealed class BottomNavItem(val route:  String, val title: String, val icon: Int 
         route = Routes.HOME,
         title = "Home",
         icon = R.drawable.ic_home
+
     )
     object Songs : BottomNavItem(
         route = Routes.SONGS,
