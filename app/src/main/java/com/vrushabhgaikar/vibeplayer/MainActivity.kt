@@ -1,6 +1,5 @@
 package com.vrushabhgaikar.vibeplayer
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,20 +8,23 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import com.vrushabhgaikar.vibeplayer.navigation.BottomNavItem
 import com.vrushabhgaikar.vibeplayer.navigation.NavGraph
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppBottomNavItem
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppMiniPlayer
+import com.vrushabhgaikar.vibeplayer.presentation.components.BottomBar
+import com.vrushabhgaikar.vibeplayer.presentation.player.PlayerBottomSheet
 import com.vrushabhgaikar.vibeplayer.ui.theme.VibePlayerTheme
-import com.vrushabhgaikar.vibeplayer.user_interface.components.BottomBar
-import com.vrushabhgaikar.vibeplayer.user_interface.screens.home.HomeScreen
-import com.vrushabhgaikar.vibeplayer.user_interface.screens.home.components.MiniPlayer
+import com.vrushabhgaikar.vibeplayer.presentation.player.PlayerViewModel
+import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +41,9 @@ class MainActivity : ComponentActivity() {
                     WindowCompat.getInsetsController(window, view)
                         .isAppearanceLightStatusBars = false   // 👈 white icons
                 }
-                MainScreen()
+                  MainScreen()
+//                OfflineMediaScreen()
+
             }
 
         }
@@ -47,34 +51,74 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(){
+fun MainScreen(
+    viewModel: PlayerViewModel = viewModel(),
+    homeViewModel: HomeViewModel = viewModel()
+) {
+    val playerState by viewModel.playerState.collectAsState()
     val navController = rememberNavController()
     val items = listOf(
-        BottomNavItem.Home,
-        BottomNavItem.Songs,
-        BottomNavItem.Video,
-        BottomNavItem.Library
+        AppBottomNavItem.Home,
+        AppBottomNavItem.Songs,
+        AppBottomNavItem.Video,
+        AppBottomNavItem.Library
     )
     Scaffold(
         bottomBar = {
             Column {
-                MiniPlayer(
-                    image = R.drawable.song1,
-                    title = "Kesariya",
-                    artist = "Arijit Singh",
-                    isPlaying = true,
-                    isLiked = false
-                )
+                    if(playerState.isMiniPlayerVisible && playerState.currentMedia != null){
+                        AppMiniPlayer(
+                            media = playerState.currentMedia!!,
+                            image = playerState.currentMedia?.thumbnailUri,
+                            title = playerState.currentMedia?.title?:"",
+                            artist = playerState.currentMedia?.artist?:"" ,
+                            isPlaying = playerState.isPlaying,
+                            onPlayerClick = {
+                                viewModel.onMiniPlayerClick()
+                            },
+                            onPlayPauseClick = {
+                                viewModel.togglePlayPause()
+                            },
+                            onLikeClick = {
+                                playerState.currentMedia?.let { media ->
+
+                                    val updatedMedia =
+                                        homeViewModel.toggleFavorite(media)
+
+                                    viewModel.onMediaUpdated(updatedMedia)
+                                }
+                            })
+
+                    }
                 BottomBar(
                     navController = navController,
                     items = items
                 )
             }
-
         }
-    ) {padding ->
+    ){padding ->
         Box(modifier = Modifier.padding(padding)){
-            NavGraph(navController = navController)
+            NavGraph(
+                navController = navController,
+                homeViewModel = homeViewModel,
+                onSongClick = {media ->
+                    viewModel.onMediaSelected(media)
+                },
+
+                onMediaUpdated = { updatedMedia ->
+                    viewModel.onMediaUpdated(updatedMedia)
+                }
+            )
         }
+
     }
+    PlayerBottomSheet(
+        uiState = playerState,
+        onDismiss = {
+            viewModel.dismissFullPlayer()
+        },
+        viewModel = viewModel,
+        homeViewModel = homeViewModel)
+
 }
+

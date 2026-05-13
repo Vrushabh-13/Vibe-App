@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">VibePlayer</string>
+    <string name="home">Home</string>
+    <string name="songs">Songs</string>
+    <string name="video">Video</string>
+    <string name="library">Library</string>
+    <string name="recently_played">Recently Played</string>
+    <string name="recommended_songs">Recommended Songs</string>
+    <string name="continue_listening_watching">Continue Listening / Watching</string>
+    <string name="vibe">Vibe</string>
+    <string name="favourites">Favourites</string>
+    <string name="playlists">Playlists</string>
+    <string name="downloads">Downloads</string>
+    <string name="recent">Recent</string>
+    <string name="my_playlists">My Playlists</string>
+    <string name="my_videos">My Videos</string>
+    <string name="trending_now">Trending Now</string>
 </resources>

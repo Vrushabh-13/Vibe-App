@@ -1,0 +1,122 @@
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.vrushabhgaikar.vibeplayer.R
+import com.vrushabhgaikar.vibeplayer.data.model.Song
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppGradientOverlay
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppIcon
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppImage
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppText
+import com.vrushabhgaikar.vibeplayer.presentation.components.HorizontalSpacer
+import com.vrushabhgaikar.vibeplayer.presentation.components.VerticalSpacer
+import com.vrushabhgaikar.vibeplayer.ui.theme.LightGray
+import com.vrushabhgaikar.vibeplayer.ui.theme.PurplePrimary
+import com.vrushabhgaikar.vibeplayer.ui.theme.White
+
+@Composable
+fun AppVideoListItem(video: Song){
+    Column{
+        Row(
+           modifier = Modifier
+               .fillMaxWidth()
+               .padding(horizontal = 16.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Box(
+                modifier = Modifier
+                    .border(
+                        width = 0.1.dp,
+                        color = LightGray,
+                        shape = RoundedCornerShape(10)
+                    )
+            ){
+                AppImage(
+                    model = video.image,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(width = 140.dp, height = 80.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                )
+                AppGradientOverlay(modifier = Modifier.matchParentSize())
+                AppIcon(
+                    painter = painterResource(id = R.drawable.ic_play),
+                    contentDescription = null,
+                    tint = White,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .size(32.dp)
+                        .background(
+                            Color.Black.copy(alpha = 0.5f),
+                            CircleShape
+                        )
+                        .padding(6.dp)
+                )
+
+                AppText(
+                    "03:28",
+                    color = White,
+                    fontSize = 10.sp,
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(6.dp)
+                        .background(
+                            Color.Black.copy(alpha = 0.7f),
+                            RoundedCornerShape(6.dp)
+                        )
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                )
+            }
+            HorizontalSpacer(12.dp)
+
+            Column(modifier = Modifier.weight(1f)) {
+
+                AppText(video.title, color = White, fontSize = 14.sp, maxLines = 2)
+
+                VerticalSpacer(4.dp)
+
+                AppText(video.artist, color = LightGray, fontSize = 12.sp)
+
+                VerticalSpacer(2.dp)
+
+                AppText(
+                    "8.4M views • 1 month ago",
+                    color = LightGray,
+                    fontSize = 11.sp
+                )
+            }
+            Column(horizontalAlignment = Alignment.End) {
+
+                AppIcon(
+                    painter = painterResource(id = R.drawable.ic_like),
+                    null,
+                    tint = PurplePrimary,
+                    modifier = Modifier.size(22.dp)
+                )
+
+                VerticalSpacer(10.dp)
+
+                AppIcon(painter = painterResource(id = R.drawable.ic_like), null, tint = White)
+            }
+        }
+        HorizontalDivider(Modifier, thickness = 0.5.dp, color = LightGray.copy(alpha = 0.1f))
+    }
+}

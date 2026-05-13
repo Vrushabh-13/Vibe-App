@@ -15,6 +15,8 @@ val PurplePrimary = Color(0xFF8A2BE2)
 val PurpleGradientStart = Color(0xFF9D4EDD)
 val PurpleGradientEnd = Color(0xFF5A189A)
 
+val PurpleLight = Color(0xFFCBC3E3)
+
 //Background
 val BlackBg = Color(0xFF0D0D0D)
 val CardBg = Color(0xFF1A1A1A)
