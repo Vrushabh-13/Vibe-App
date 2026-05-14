@@ -1,5 +1,6 @@
 package com.vrushabhgaikar.vibeplayer.presentation.components
 
+import android.R.attr.onClick
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -20,23 +21,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.vrushabhgaikar.vibeplayer.domain.model.SourceType
 import com.vrushabhgaikar.vibeplayer.ui.theme.CardBg
 import com.vrushabhgaikar.vibeplayer.ui.theme.LightGray
 import com.vrushabhgaikar.vibeplayer.ui.theme.PurpleGradient
 import com.vrushabhgaikar.vibeplayer.ui.theme.White
 
 @Composable
-fun AppFilterChips(){
-    var selected by remember { mutableStateOf("All") }
+fun AppFilterChips(selectedFilter: String ,
+                   onSelect: (String) -> Unit){
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        ChipItem("All",selected){selected = it}
-        ChipItem("Online",selected){selected = it}
-        ChipItem("Offline",selected){selected = it}
+        ChipItem(text =SourceType.ALL.value,selected = selectedFilter ,onClick  = onSelect)
+        ChipItem(text = SourceType.ONLINE.value,selected = selectedFilter , onClick  = onSelect)
+        ChipItem(text = SourceType.OFFLINE.value,selected = selectedFilter , onClick  = onSelect)
 
     }
 }

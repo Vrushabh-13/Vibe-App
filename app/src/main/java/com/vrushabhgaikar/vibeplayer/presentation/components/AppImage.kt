@@ -12,6 +12,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.vrushabhgaikar.vibeplayer.R
+import com.vrushabhgaikar.vibeplayer.domain.model.PlaceholderType
+import com.vrushabhgaikar.vibeplayer.utils.AppUtils
 
 @Composable
 fun AppImage(
@@ -20,20 +22,22 @@ fun AppImage(
     contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Crop,
     cornerRadius: Dp = 0.dp,
-    placeholder: Painter? = painterResource(R.drawable.img_music_thumb),
-    error: Painter? = painterResource(R.drawable.img_music_thumb),
-    fallback: Painter? = painterResource(R.drawable.img_music_thumb)
+    placeholderType: PlaceholderType = PlaceholderType.OTHER
 ) {
+
+    val img = AppUtils.getPlaceHolder(placeholderType)
+    val placeholder = painterResource(img)
 
     AsyncImage(
         model = model,
         contentDescription = contentDescription,
         contentScale = contentScale,
         placeholder = placeholder,
-        error = error,
-        fallback = fallback,
+        error = placeholder,
+        fallback = placeholder,
         modifier = modifier.clip(
             RoundedCornerShape(cornerRadius)
+
         )
     )
 }
@@ -44,12 +48,14 @@ fun AppImage(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Crop
+
 ) {
 
     Image(
         painter = painter,
         contentDescription = contentDescription,
         modifier = modifier,
-        contentScale = contentScale
+        contentScale = contentScale,
+
     )
 }

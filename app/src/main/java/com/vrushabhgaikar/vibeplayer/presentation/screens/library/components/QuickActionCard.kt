@@ -1,6 +1,7 @@
 package com.vrushabhgaikar.vibeplayer.presentation.screens.library.components
 
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,9 +27,11 @@ import com.vrushabhgaikar.vibeplayer.ui.theme.White
 
 
 @Composable
-fun QuickActionCard(icon: Painter, title: String, subtitle: String, modifier: Modifier = Modifier){
+fun QuickActionCard(icon: Painter, title: String, modifier: Modifier = Modifier, onClick: () -> Unit = {}){
     Card(
-        modifier = modifier.height(90.dp),
+        modifier = modifier
+            .height(90.dp)
+            .clickable{ onClick()},
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -49,7 +52,7 @@ fun QuickActionCard(icon: Painter, title: String, subtitle: String, modifier: Mo
 
             AppText(title, color = White, fontSize = 10.sp, lineHeight = 10.sp)
 
-            AppText(subtitle, color = LightGray, fontSize = 8.sp)
+//            AppText(subtitle, color = LightGray, fontSize = 8.sp)
 
         }
     }

@@ -1,6 +1,7 @@
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,7 +21,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vrushabhgaikar.vibeplayer.R
-import com.vrushabhgaikar.vibeplayer.data.model.Song
+import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
+import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
+import com.vrushabhgaikar.vibeplayer.domain.model.PlaceholderType
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppGradientOverlay
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppIcon
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppImage
@@ -32,12 +35,17 @@ import com.vrushabhgaikar.vibeplayer.ui.theme.PurplePrimary
 import com.vrushabhgaikar.vibeplayer.ui.theme.White
 
 @Composable
-fun AppVideoListItem(video: Song){
+fun AppVideoListItem(media: MediaItemModel,
+                     onClick: () -> Unit,
+                     onIsFavClick: () -> Unit = {}){
     Column{
         Row(
            modifier = Modifier
                .fillMaxWidth()
-               .padding(horizontal = 16.dp, vertical = 10.dp),
+               .padding(horizontal = 16.dp, vertical = 10.dp)
+               .clickable {
+                   onClick()
+               },
             verticalAlignment = Alignment.CenterVertically
         ){
             Box(
@@ -49,21 +57,27 @@ fun AppVideoListItem(video: Song){
                     )
             ){
                 AppImage(
-                    model = video.image,
+                    model = media.thumbnailUri,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(width = 140.dp, height = 80.dp)
-                        .clip(RoundedCornerShape(10.dp))
+                        .clip(RoundedCornerShape(10.dp)),
+                    placeholderType = PlaceholderType.VIDEO
                 )
                 AppGradientOverlay(modifier = Modifier.matchParentSize())
                 AppIcon(
-                    painter = painterResource(id = R.drawable.ic_play),
+                    painter = painterResource(id =
+                        if(media.mediaType == MediaType.AUDIO)
+                            R.drawable.img_music_icon
+                        else
+                            R.drawable.img_video_icon),
                     contentDescription = null,
                     tint = White,
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .size(32.dp)
+                        .padding(7.dp)
+                        .size(28.dp)
                         .background(
                             Color.Black.copy(alpha = 0.5f),
                             CircleShape
@@ -89,32 +103,42 @@ fun AppVideoListItem(video: Song){
 
             Column(modifier = Modifier.weight(1f)) {
 
-                AppText(video.title, color = White, fontSize = 14.sp, maxLines = 2)
+                AppText(media.title?:"", color = White, fontSize = 14.sp, maxLines = 2)
 
                 VerticalSpacer(4.dp)
 
-                AppText(video.artist, color = LightGray, fontSize = 12.sp)
+                AppText(media.artist?:"", color = LightGray, fontSize = 12.sp)
 
                 VerticalSpacer(2.dp)
 
-                AppText(
-                    "8.4M views • 1 month ago",
-                    color = LightGray,
-                    fontSize = 11.sp
-                )
+//                AppText(
+//                    "8.4M views • 1 month ago",
+//                    color = LightGray,
+//                    fontSize = 11.sp
+//                )
             }
             Column(horizontalAlignment = Alignment.End) {
 
                 AppIcon(
-                    painter = painterResource(id = R.drawable.ic_like),
+                    painter = painterResource(if(media.isFav)
+                        R.drawable.ic_heart_fill
+                    else
+                        R.drawable.ic_like),
                     null,
-                    tint = PurplePrimary,
+                    tint = if(media.isFav)
+                        PurplePrimary
+                    else
+                        LightGray,
                     modifier = Modifier.size(22.dp)
+                        .clip(shape = CircleShape)
+                        .clickable{
+                            onIsFavClick()
+                        }
                 )
 
-                VerticalSpacer(10.dp)
-
-                AppIcon(painter = painterResource(id = R.drawable.ic_like), null, tint = White)
+//                VerticalSpacer(10.dp)
+//
+//                AppIcon(painter = painterResource(id = R.drawable.ic_like), null, tint = White)
             }
         }
         HorizontalDivider(Modifier, thickness = 0.5.dp, color = LightGray.copy(alpha = 0.1f))

@@ -2,6 +2,7 @@ package com.vrushabhgaikar.vibeplayer.presentation.player
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.ui.PlayerView
 import com.vrushabhgaikar.vibeplayer.R
+import com.vrushabhgaikar.vibeplayer.domain.model.PlaceholderType
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppImage
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppText
 import com.vrushabhgaikar.vibeplayer.ui.theme.BlackBg
@@ -63,28 +65,28 @@ fun VideoPlayerContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         // 🔹 Drag Handle
-        Box(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .width(50.dp)
-                .height(5.dp)
-                .background(
-                    LightGray.copy(alpha = 0.4f),
-                    RoundedCornerShape(50)
-                )
-        )
+//        Box(
+//            modifier = Modifier
+//                .align(Alignment.CenterHorizontally)
+//                .width(50.dp)
+//                .height(5.dp)
+//                .background(
+//                    LightGray.copy(alpha = 0.4f),
+//                    RoundedCornerShape(50)
+//                )
+//        )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         // 🔹 Back button
-        Icon(
-            painterResource(id = R.drawable.ic_left_arrow),
-            contentDescription = null,
-            tint = White,
-            modifier = Modifier.size(28.dp)
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
+//        Icon(
+//            painterResource(id = R.drawable.ic_left_arrow),
+//            contentDescription = null,
+//            tint = White,
+//            modifier = Modifier.size(28.dp)
+//        )
+//
+//        Spacer(modifier = Modifier.height(20.dp))
 
         // ===================================================
         // VIDEO AREA
@@ -98,12 +100,23 @@ fun VideoPlayerContent(
         ) {
 
             // 🔹 Video Thumbnail
-            AppImage(
-                model = uiState.currentMedia?.thumbnailUri,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
+            Box(
+                modifier = Modifier
+                    .border(
+                        width = 0.1.dp,
+                        color = LightGray,
+                        shape = RoundedCornerShape(11)
+                    )
+            ){
+                AppImage(
+                    model = uiState.currentMedia?.thumbnailUri,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                    placeholderType = PlaceholderType.VIDEO
+                )
+            }
+
 
             // 🔹 Dark overlay
             Box(

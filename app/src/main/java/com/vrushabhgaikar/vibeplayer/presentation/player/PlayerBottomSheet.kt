@@ -44,7 +44,8 @@ fun PlayerBottomSheet(
                         isFav = {
                              uiState.currentMedia?.let {media ->
                                  val updatedMedia = homeViewModel.toggleFavorite(media)
-                                 viewModel.onMediaUpdated(updatedMedia)
+                                 viewModel.updatedCurrentMedia(updatedMedia)
+
                              }
                         },
                         onRepeat = {

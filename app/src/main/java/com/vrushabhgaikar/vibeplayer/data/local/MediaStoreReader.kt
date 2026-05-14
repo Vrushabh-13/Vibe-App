@@ -6,6 +6,7 @@ import android.content.Context
 import android.provider.MediaStore
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
+import com.vrushabhgaikar.vibeplayer.domain.model.SourceType
 
 class MediaStoreReader(
     private val context: Context
@@ -81,7 +82,10 @@ class MediaStoreReader(
                             uri = uri,
                             duration = duration,
                             mediaType = MediaType.AUDIO,
-                            thumbnailUri = uri
+                            sourceType = SourceType.OFFLINE,
+                            thumbnailUri = uri,
+
+
                         )
                     )
                 }

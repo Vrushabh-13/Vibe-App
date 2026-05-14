@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vrushabhgaikar.vibeplayer.R
 import com.vrushabhgaikar.vibeplayer.data.model.Song
+import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
+import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
+import com.vrushabhgaikar.vibeplayer.domain.model.PlaceholderType
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppGradientOverlay
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppIcon
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppImage
@@ -35,11 +39,15 @@ import com.vrushabhgaikar.vibeplayer.ui.theme.LightGray
 import com.vrushabhgaikar.vibeplayer.ui.theme.White
 
 @Composable
-fun VideoCard(video: Song){
-    Column(modifier = Modifier.width(220.dp)
-        .clickable(onClick = {
-            // open bottomsheet
-        })) {
+fun VideoCard(media: MediaItemModel,
+              onClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .width(220.dp)
+            .clickable {
+                onClick()
+            }
+    ) {
         Box(
             modifier = Modifier
                 .border(
@@ -47,31 +55,37 @@ fun VideoCard(video: Song){
                     color = LightGray,
                     shape = RoundedCornerShape(14)
                 )
-        ){
+        ) {
             AppImage(
-                painter = painterResource(video.image),
+                model = media.thumbnailUri,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .height(130.dp)
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(16.dp)),
+                placeholderType = PlaceholderType.VIDEO
             )
 
             AppGradientOverlay(modifier = Modifier.matchParentSize())
 
             AppIcon(
-                painter = painterResource(id = R.drawable.ic_play),
+                painter = painterResource(id =
+                    if(media.mediaType == MediaType.AUDIO)
+                        R.drawable.img_music_icon
+                    else
+                        R.drawable.img_video_icon),
                 contentDescription = null,
                 tint = White,
                 modifier = Modifier
+                    .size(50.dp)
                     .align(Alignment.BottomEnd)
                     .padding(10.dp)
                     .background(
                         Color.Black.copy(alpha = 0.6f),
                         CircleShape
                     )
-                    .padding(6.dp)
+                    .padding(7.dp)
             )
             AppText(
                 text = "03:45",
@@ -88,8 +102,8 @@ fun VideoCard(video: Song){
 
         VerticalSpacer(8.dp)
 
-                AppText(video.title, color = White, fontSize = 14.sp, maxLines = 1)
-                AppText(video.artist, color = LightGray, fontSize = 12.sp)
+        AppText(media.title?:"", color = White, fontSize = 14.sp, maxLines = 1)
+        AppText(media.artist?:"", color = LightGray, fontSize = 12.sp)
 
 
     }

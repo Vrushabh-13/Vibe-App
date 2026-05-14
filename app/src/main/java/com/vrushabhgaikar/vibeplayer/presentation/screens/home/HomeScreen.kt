@@ -100,7 +100,8 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel(),
                         onSongClick(media)
                     },
                     onIsFavClick = {
-                        viewModel.toggleFavorite(media)
+                        val updated = viewModel.toggleFavorite(media)
+                        onMediaUpdated(updated)
                     }
                 )
             }

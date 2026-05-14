@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -16,8 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.vrushabhgaikar.vibeplayer.navigation.NavGraph
+import com.vrushabhgaikar.vibeplayer.navigation.Routes
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppBottomNavItem
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppMiniPlayer
 import com.vrushabhgaikar.vibeplayer.presentation.components.BottomBar
@@ -41,7 +44,9 @@ class MainActivity : ComponentActivity() {
                     WindowCompat.getInsetsController(window, view)
                         .isAppearanceLightStatusBars = false   // 👈 white icons
                 }
-                  MainScreen()
+                val playerViewModel: PlayerViewModel by viewModels()
+                val homeViewModel: HomeViewModel by viewModels()
+                  MainScreen(playerViewModel,homeViewModel)
 //                OfflineMediaScreen()
 
             }
@@ -52,11 +57,15 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(
-    viewModel: PlayerViewModel = viewModel(),
-    homeViewModel: HomeViewModel = viewModel()
+    viewModel: PlayerViewModel,
+    homeViewModel: HomeViewModel
 ) {
     val playerState by viewModel.playerState.collectAsState()
     val navController = rememberNavController()
+    val currentRoute =
+        navController.currentBackStackEntryAsState().value?.destination?.route
+
+    val showBottomBar = currentRoute != Routes.FAVORITES
     val items = listOf(
         AppBottomNavItem.Home,
         AppBottomNavItem.Songs,
@@ -68,7 +77,7 @@ fun MainScreen(
             Column {
                     if(playerState.isMiniPlayerVisible && playerState.currentMedia != null){
                         AppMiniPlayer(
-                            media = playerState.currentMedia!!,
+                            media =  playerState.currentMedia!!,
                             image = playerState.currentMedia?.thumbnailUri,
                             title = playerState.currentMedia?.title?:"",
                             artist = playerState.currentMedia?.artist?:"" ,
@@ -84,16 +93,18 @@ fun MainScreen(
 
                                     val updatedMedia =
                                         homeViewModel.toggleFavorite(media)
-
                                     viewModel.onMediaUpdated(updatedMedia)
                                 }
                             })
 
                     }
-                BottomBar(
-                    navController = navController,
-                    items = items
-                )
+                if(showBottomBar){
+                    BottomBar(
+                        navController = navController,
+                        items = items
+                    )
+                }
+
             }
         }
     ){padding ->

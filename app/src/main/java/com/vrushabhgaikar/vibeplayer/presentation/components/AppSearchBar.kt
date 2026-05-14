@@ -35,8 +35,10 @@ import com.vrushabhgaikar.vibeplayer.ui.theme.LightGray
 import com.vrushabhgaikar.vibeplayer.ui.theme.PurplePrimary
 
 @Composable
-fun AppSearchBar(){
-    var text by remember { mutableStateOf("") }
+fun AppSearchBar(
+    value: String,
+    onValueChange: (String) -> Unit
+){
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -69,11 +71,12 @@ fun AppSearchBar(){
 
 
             BasicTextField(
-                value = text,
+                value = value,
                 onValueChange = {
-                    text = it.filter { char ->
+                    val filteredText = it.filter { char ->
                         char.isLetterOrDigit() || char.isWhitespace()
                     }
+                    onValueChange(filteredText)
                 },
                 singleLine = true,
                 textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
@@ -84,21 +87,21 @@ fun AppSearchBar(){
 
             )
 
-            if(text.isEmpty()){
+            if(value.isEmpty()){
                 Text(
                     text = "What do you want to listen to?",
                     color = LightGray
                 )
             }
 
-            if(text.isNotEmpty()){
+            if(value.isNotEmpty()){
                 Icon(
                     painter = painterResource(id = R.drawable.ic_cross),
                     contentDescription = "Clear",
                     modifier = Modifier
                         .size(20.dp)
                         .clickable{
-                            text = ""
+                            onValueChange("")
                         }
                 )
             }

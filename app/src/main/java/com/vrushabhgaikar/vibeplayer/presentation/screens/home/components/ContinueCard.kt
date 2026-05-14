@@ -30,6 +30,8 @@ import coil.compose.AsyncImage
 import com.vrushabhgaikar.vibeplayer.R
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
+import com.vrushabhgaikar.vibeplayer.domain.model.PlaceholderType
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppGradientOverlay
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppIcon
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppImage
 import com.vrushabhgaikar.vibeplayer.ui.theme.CardBg
@@ -39,8 +41,6 @@ import com.vrushabhgaikar.vibeplayer.ui.theme.White
 @Composable
 fun ContinueCard(
     media: MediaItemModel,
-
-    isVideo: Boolean = false,
     onPlayClick: () -> Unit = {}
 ) {
 
@@ -69,24 +69,53 @@ fun ContinueCard(
                     .fillMaxWidth()
                     .height(110.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .clickable { onPlayClick() }
+                    .clickable { onPlayClick() },
+                placeholderType = if (media.mediaType == MediaType.VIDEO){
+                    PlaceholderType.VIDEO}else PlaceholderType.AUDIO
+
             )
+            AppGradientOverlay( modifier = Modifier.matchParentSize())
 
             // 🔹 Audio/Video Chip
-            Text(
-                text = if (media.mediaType == MediaType.VIDEO) "VIDEO" else "AUDIO",
-                color = White,
-                fontSize = 10.sp,
+            Box(
                 modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(6.dp)
+                    .align(Alignment.BottomEnd)
+                    .padding(7.dp)
+                    .size(30.dp)
                     .background(
-                        color = MaterialTheme.colorScheme.secondary,
-                        //Color.PurplePrimary.copy(alpha = 0.6f),
-                        RoundedCornerShape(50)
-                    )
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
-            )
+                        Color.Black.copy(alpha = 0.5f),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                AppIcon(
+                    painter = painterResource(
+                        id =
+                            if (media.mediaType == MediaType.AUDIO)
+                                R.drawable.img_music_icon
+                            else
+                                R.drawable.img_video_icon
+                    ),
+                    contentDescription = null,
+                    tint = White,
+                    modifier = Modifier
+                        .size(14.dp)
+                )
+            }
+//            Text(
+//                text = if (media.mediaType == MediaType.VIDEO) "VIDEO" else "AUDIO",
+//                color = White,
+//                fontSize = 10.sp,
+//                modifier = Modifier
+//                    .align(Alignment.TopStart)
+//                    .padding(6.dp)
+//                    .background(
+//                        color = MaterialTheme.colorScheme.secondary,
+//                        //Color.PurplePrimary.copy(alpha = 0.6f),
+//                        RoundedCornerShape(50)
+//                    )
+//                    .padding(horizontal = 8.dp, vertical = 2.dp)
+//            )
         }
 
         Spacer(modifier = Modifier.height(8.dp))

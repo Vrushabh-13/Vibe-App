@@ -1,5 +1,6 @@
 package com.vrushabhgaikar.vibeplayer.navigation
 
+import com.vrushabhgaikar.vibeplayer.presentation.screens.FavoritesScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -32,19 +33,39 @@ fun NavGraph(navController: NavHostController,
 
         composable(Routes.SONGS){
             SongsScreen(
-//                viewModel = homeViewModel,
-//                onSongClick = onSongClick
+                viewModel = homeViewModel,
+                onSongClick = onSongClick,
+                onMediaUpdated = onMediaUpdated
             )
         }
 
         composable(Routes.VIDEO){
             VideoScreen(
-
+                viewModel = homeViewModel,
+                onVideoClick = { media ->
+                    onSongClick(media)
+                },
+                onMediaUpdated = onMediaUpdated
             )
         }
 
         composable(Routes.LIBRARY){
-            LibraryScreen()
+            LibraryScreen(viewModel = homeViewModel,
+                navController = navController,
+                onOpenFavorites = {
+                    navController.navigate(Routes.FAVORITES)
+                })
         }
+
+        composable(Routes.FAVORITES) {
+            FavoritesScreen(
+                viewModel = homeViewModel,
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+
     }
 }

@@ -1,6 +1,7 @@
 package com.vrushabhgaikar.vibeplayer.presentation.player
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vrushabhgaikar.vibeplayer.R
+import com.vrushabhgaikar.vibeplayer.domain.model.PlaceholderType
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppGradientOverlay
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppIcon
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppImage
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppText
@@ -60,14 +63,27 @@ fun AudioPlayerContent(
         VerticalSpacer(24.dp)
 
         // Album Art + Pulse
-        AppImage(
-            model = uiState.currentMedia?.thumbnailUri,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
+        Box(
             modifier = Modifier
-                .size(300.dp)
-                .clip(RoundedCornerShape(8.dp))
-        )
+                .border(
+                    width = 0.1.dp,
+                    color = LightGray,
+                    shape = RoundedCornerShape(10)
+                )
+        ){
+            AppImage(
+                model = uiState.currentMedia?.thumbnailUri,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(300.dp)
+                    .clip(RoundedCornerShape(30.dp)),
+                placeholderType = PlaceholderType.AUDIO,
+
+            )
+            AppGradientOverlay( modifier = Modifier.matchParentSize())
+        }
+
 
 
         VerticalSpacer(32.dp)
@@ -149,6 +165,7 @@ fun AudioPlayerContent(
                 else
                     LightGray,
                 modifier = Modifier.size(34.dp)
+                    .clip(shape = CircleShape)
                     .clickable{
                         onRepeat()
                     }
@@ -159,12 +176,14 @@ fun AudioPlayerContent(
                 contentDescription = null,
                 tint = White,
                 modifier = Modifier.size(42.dp)
+                    .clip(shape = CircleShape)
                     .clickable{ onBack10() }
             )
 
             Box(
                 modifier = Modifier
                     .size(110.dp)
+                    .clip(shape = CircleShape)
                     .background(
                         brush = Brush.verticalGradient(
                             listOf(
@@ -198,6 +217,7 @@ fun AudioPlayerContent(
                 contentDescription = null,
                 tint = White,
                 modifier = Modifier.size(42.dp)
+                    .clip(shape = CircleShape)
                     .clickable{
                         onForward10()
                     }
@@ -214,6 +234,7 @@ fun AudioPlayerContent(
                     else
                         LightGray,
                 modifier = Modifier.size(38.dp)
+                    .clip(shape = CircleShape)
                     .clickable{
                         isFav()
                     }

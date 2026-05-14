@@ -5,4 +5,6 @@ object Routes{
     const val SONGS = "songs"
     const val VIDEO = "video"
     const val LIBRARY = "library"
+
+    const val FAVORITES = "favorites"
 }

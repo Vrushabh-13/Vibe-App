@@ -26,7 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vrushabhgaikar.vibeplayer.R
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
+import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
+import com.vrushabhgaikar.vibeplayer.domain.model.PlaceholderType
 import com.vrushabhgaikar.vibeplayer.ui.theme.LightGray
+import com.vrushabhgaikar.vibeplayer.ui.theme.PurplePrimary
 import com.vrushabhgaikar.vibeplayer.ui.theme.White
 
 @Composable
@@ -50,32 +53,43 @@ fun AppSongCard(
                 )
         ){
             AppImage(
-                model = media.thumbnailUri,
+                model = media.thumbnailUri ,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.img_music_thumb),
-                error = painterResource(R.drawable.img_music_thumb),
-                fallback = painterResource(R.drawable.img_music_thumb),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .clickable(onClick = onClick)
+                    .clickable(onClick = onClick),
+                placeholderType = PlaceholderType.AUDIO
             )
             AppGradientOverlay( modifier = Modifier.matchParentSize())
-            AppIcon(
-                painter = painterResource(id = R.drawable.ic_play),
-                contentDescription = null,
-                tint = White,
+
+            Box(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .size(36.dp)
+                    .padding(7.dp)
+                    .size(30.dp)
                     .background(
                         Color.Black.copy(alpha = 0.5f),
                         shape = CircleShape
-                    )
-                    .padding(6.dp)
-            )
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                AppIcon(
+                    painter = painterResource(
+                        id =
+                            if (media.mediaType == MediaType.AUDIO)
+                                R.drawable.img_music_icon
+                            else
+                                R.drawable.img_video_icon
+                    ),
+                    contentDescription = null,
+                    tint = White,
+                    modifier = Modifier
+                    .size(14.dp)
+                )
+            }
         }
         VerticalSpacer(8.dp)
 
@@ -105,10 +119,15 @@ fun AppSongCard(
                     else
                         R.drawable.ic_like
             ),
+                tint =  if(media.isFav)
+                    PurplePrimary
+                else
+                    LightGray,
                 contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .padding(8.dp)
+                    .clip(shape = CircleShape)
                     .clickable{
                         onIsFavClick()
                     }

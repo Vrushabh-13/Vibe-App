@@ -9,3 +9,11 @@ enum class MediaType {
     VIDEO
 }
 
+
+
+enum class PlaceholderType {
+    AUDIO,
+    VIDEO,
+    PROFILE,
+    OTHER
+}

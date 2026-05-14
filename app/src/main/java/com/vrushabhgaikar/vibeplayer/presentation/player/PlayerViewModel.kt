@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
+import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,6 +35,14 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
             isMiniPlayerVisible = true,
             isPlaying = true
         )
+    }
+    fun syncFavorite(mediaId: Long, homeViewModel: HomeViewModel) {
+        val updated = homeViewModel.getMediaById(mediaId)
+        updated?.let {
+            _playerState.value = _playerState.value.copy(
+                currentMedia = it
+            )
+        }
     }
 
     fun togglePlayPause(){
@@ -79,10 +88,6 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
 //            currentMedia = updatedMedia
 //        )
 //    }
-//fun updatedCurrentMedia(media: MediaItemModel){
-//    _playerState.value =
-//        _playerState.value.copy(currentMedia = media)
-//}
 
     fun onMediaUpdated(updatedMedia: MediaItemModel) {
 
@@ -94,6 +99,10 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
             )
         }
     }
+fun updatedCurrentMedia(media: MediaItemModel){
+    _playerState.value =
+        _playerState.value.copy(currentMedia = media)
+}
 
     fun toggleRepeat(){
 
@@ -119,7 +128,8 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
                 _playerState.value = _playerState.value.copy(
                     currentPosition = currentPosition,
                     duration = duration,
-                    currentMedia = updatedMedia
+                    currentMedia = updatedMedia,
+                    isPlaying = playerManager.isPlaying()
                 )
                 delay(500)
             }
