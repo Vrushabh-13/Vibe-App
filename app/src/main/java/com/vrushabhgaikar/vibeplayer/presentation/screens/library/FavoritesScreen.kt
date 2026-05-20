@@ -1,7 +1,7 @@
 package com.vrushabhgaikar.vibeplayer.presentation.screens
 
-import AppTopBar
 import AppVideoListItem
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppTopBar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
