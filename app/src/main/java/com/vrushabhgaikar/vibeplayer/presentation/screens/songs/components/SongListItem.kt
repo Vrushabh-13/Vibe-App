@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
+import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
 import com.vrushabhgaikar.vibeplayer.domain.model.PlaceholderType
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppGradientOverlay
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppIcon
@@ -68,7 +69,11 @@ fun SongListItem(
                     .size(60.dp)
                     .clip(RoundedCornerShape(12.dp)),
 
-                placeholderType = PlaceholderType.AUDIO
+                placeholderType = if (MediaType.AUDIO == media.mediaType){
+                    PlaceholderType.AUDIO
+                }else{
+                    PlaceholderType.VIDEO
+                }
 
             )
             AppGradientOverlay( modifier = Modifier.matchParentSize())
@@ -90,7 +95,7 @@ fun SongListItem(
                 }
                 else{
                     com.vrushabhgaikar.vibeplayer.R.drawable.ic_like}),
-                null,
+                contentDescription = null,
                 tint =  if(media.isFav)
                     PurplePrimary
                 else

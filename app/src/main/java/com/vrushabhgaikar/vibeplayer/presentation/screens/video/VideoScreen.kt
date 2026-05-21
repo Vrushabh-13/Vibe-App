@@ -1,11 +1,12 @@
 package com.vrushabhgaikar.vibeplayer.presentation.screens.video
 
-import AppTopBar
 import AppVideoListItem
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppTopBar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
@@ -41,15 +42,11 @@ fun VideoScreen(
 //            Song(R.drawable.img_music_thumb, "Ranjha", "Shershaah")
 //        )
 //    }
-
+    AppTopBar("Video")
     LazyColumn( modifier = Modifier
-        .fillMaxSize()
+        .padding(top = 60.dp)
         .background(BlackBg),
         contentPadding = PaddingValues(bottom = 80.dp)) {
-
-        item {AppTopBar("Video")
-        }
-
         item { VerticalSpacer(12.dp) }
 
         item { AppSearchBar(
@@ -60,7 +57,7 @@ fun VideoScreen(
 
         item { VerticalSpacer(16.dp) }
         if(searchQuery.value.isBlank()) {
-            item { AppSectionTitle("Trending Now") }
+            item { AppSectionTitle("Trending Now",) }
             item{
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 16.dp),
@@ -70,6 +67,7 @@ fun VideoScreen(
                         VideoCard(
                             media = video,
                             onClick = {
+                                viewModel.updatePlayedMedia(video)
                                 onVideoClick(video)
                             }
                         )
@@ -92,6 +90,7 @@ fun VideoScreen(
         items(items = videos.value , key = { it.id!! }) { media ->
             AppVideoListItem(media = media,
                 onClick = {
+                    viewModel.updatePlayedMedia(media)
                     onVideoClick(media)
                 },
                 onIsFavClick = {

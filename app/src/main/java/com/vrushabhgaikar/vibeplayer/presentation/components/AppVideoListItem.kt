@@ -33,6 +33,7 @@ import com.vrushabhgaikar.vibeplayer.presentation.components.VerticalSpacer
 import com.vrushabhgaikar.vibeplayer.ui.theme.LightGray
 import com.vrushabhgaikar.vibeplayer.ui.theme.PurplePrimary
 import com.vrushabhgaikar.vibeplayer.ui.theme.White
+import com.vrushabhgaikar.vibeplayer.utils.TimeUtils
 
 @Composable
 fun AppVideoListItem(media: MediaItemModel,
@@ -86,7 +87,7 @@ fun AppVideoListItem(media: MediaItemModel,
                 )
 
                 AppText(
-                    "03:28",
+                    text = TimeUtils.formatDuration(media.duration),
                     color = White,
                     fontSize = 10.sp,
                     modifier = Modifier
@@ -124,7 +125,7 @@ fun AppVideoListItem(media: MediaItemModel,
                         R.drawable.ic_heart_fill
                     else
                         R.drawable.ic_like),
-                    null,
+                    contentDescription = null,
                     tint = if(media.isFav)
                         PurplePrimary
                     else

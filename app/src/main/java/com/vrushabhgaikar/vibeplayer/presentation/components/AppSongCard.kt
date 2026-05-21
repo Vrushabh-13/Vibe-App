@@ -38,6 +38,7 @@ fun AppSongCard(
     onClick: () -> Unit = {},
     onIsFavClick: () -> Unit = {},
     modifier: Modifier = Modifier,
+    showNewChip: Boolean = false
 
     ){
     Column(
@@ -64,6 +65,29 @@ fun AppSongCard(
                 placeholderType = PlaceholderType.AUDIO
             )
             AppGradientOverlay( modifier = Modifier.matchParentSize())
+
+            if (showNewChip) {
+
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .background(
+                            Color.Red,
+                            RoundedCornerShape(8.dp)
+                        )
+                        .padding(
+                            horizontal = 8.dp,
+                            vertical = 4.dp
+                        )
+                ) {
+
+                    AppText(
+                        text = "NEW",
+                        color = White,
+                        fontSize = 10.sp
+                    )
+                }
+            }
 
             Box(
                 modifier = Modifier

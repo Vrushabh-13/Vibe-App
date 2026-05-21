@@ -36,6 +36,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
 
+            intent?.getLongExtra(
+                "songId",
+                -1L
+            )
+
             VibePlayerTheme {
                 val view = LocalView.current
                 SideEffect {
@@ -65,7 +70,15 @@ fun MainScreen(
     val currentRoute =
         navController.currentBackStackEntryAsState().value?.destination?.route
 
-    val showBottomBar = currentRoute != Routes.FAVORITES
+//    val showBottomBar = currentRoute != Routes.FAVORITES
+    val bottomBarRoutes = listOf(
+        Routes.HOME,
+        Routes.SONGS,
+        Routes.VIDEO,
+        Routes.LIBRARY
+    )
+
+    val showBottomBar = currentRoute in bottomBarRoutes && !playerState.isVideoFullScreen
     val items = listOf(
         AppBottomNavItem.Home,
         AppBottomNavItem.Songs,
@@ -75,7 +88,8 @@ fun MainScreen(
     Scaffold(
         bottomBar = {
             Column {
-                    if(playerState.isMiniPlayerVisible && playerState.currentMedia != null){
+                    if(playerState.isMiniPlayerVisible && playerState.currentMedia != null &&
+                        currentRoute != Routes.VIDEO_FULLSCREEN){
                         AppMiniPlayer(
                             media =  playerState.currentMedia!!,
                             image = playerState.currentMedia?.thumbnailUri,
@@ -118,6 +132,9 @@ fun MainScreen(
 
                 onMediaUpdated = { updatedMedia ->
                     viewModel.onMediaUpdated(updatedMedia)
+                },
+                onCloseVideoFullScreen = {
+                    viewModel.closeVideoFullScreen()
                 }
             )
         }
@@ -129,7 +146,8 @@ fun MainScreen(
             viewModel.dismissFullPlayer()
         },
         viewModel = viewModel,
-        homeViewModel = homeViewModel)
+        homeViewModel = homeViewModel,
+        navController = navController)
 
 }
 

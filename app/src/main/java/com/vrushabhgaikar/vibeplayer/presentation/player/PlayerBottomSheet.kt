@@ -5,7 +5,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
+import com.vrushabhgaikar.vibeplayer.navigation.Routes
 import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeViewModel
 
 
@@ -15,7 +18,8 @@ fun PlayerBottomSheet(
      uiState: PlayerUiState,
     onDismiss: () -> Unit,
      viewModel: PlayerViewModel,
-     homeViewModel: HomeViewModel
+     homeViewModel: HomeViewModel,
+     navController: NavHostController
 ){
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -55,7 +59,24 @@ fun PlayerBottomSheet(
                 }
 
                 MediaType.VIDEO -> {
-                    VideoPlayerContent(uiState)
+                    VideoPlayerContent(
+                        navController = navController,
+                        uiState = uiState,
+                        onSeek = { viewModel.seekTo(it) },
+                        onPlayPause = { viewModel.togglePlayPause() },
+                        onForward10 = { viewModel.seekForward10() },
+                        onBack10 = { viewModel.seekBackward10() },
+                        onFullScreen = {
+                            viewModel.openVideoFullScreen()
+                            navController.navigate(Routes.VIDEO_FULLSCREEN)
+                        },
+                        isFav = {
+                            uiState.currentMedia?.let {media ->
+                                val updatedMedia = homeViewModel.toggleFavorite(media)
+                                viewModel.updatedCurrentMedia(updatedMedia)
+
+                            }
+                        })
                 }
                 else -> {}
             }

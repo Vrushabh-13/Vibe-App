@@ -1,18 +1,24 @@
 package com.vrushabhgaikar.vibeplayer.presentation.screens.home
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.vrushabhgaikar.vibeplayer.data.local.MediaStoreReader
+import com.vrushabhgaikar.vibeplayer.data.local.database.DatabaseProvider
+import com.vrushabhgaikar.vibeplayer.data.local.entity.RecommendedSongEntity
 import com.vrushabhgaikar.vibeplayer.data.repository.MediaRepositoryImpl
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
+import com.vrushabhgaikar.vibeplayer.domain.model.PlaylistModel
 import com.vrushabhgaikar.vibeplayer.domain.model.SourceType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.http.Query
 import javax.xml.transform.Source
+import com.vrushabhgaikar.vibeplayer.data.manager.RecommendationManager
+import com.vrushabhgaikar.vibeplayer.data.repository.RecommendationRepository
 
 class HomeViewModel(
     application: Application
@@ -38,11 +44,23 @@ class HomeViewModel(
     val recentlyPlayedList: StateFlow<List<MediaItemModel>>
             = _recentlyPlayedList
 
-    private val _recommendedSongs =
+    private val _historyList =
         MutableStateFlow<List<MediaItemModel>>(emptyList())
 
-    val recommendedSongs: StateFlow<List<MediaItemModel>>
-            = _recommendedSongs
+    val historyList: StateFlow<List<MediaItemModel>> =
+        _historyList
+
+    private val db = DatabaseProvider.getDatabase(application)
+    private val repo = RecommendationRepository(db.recommendationDao())
+
+    val recommendedSongs = repo.getRecommendations()
+//    private val _recommendedSongs =
+//        MutableStateFlow<List<MediaItemModel>>(emptyList())
+//
+//    val recommendedSongs: StateFlow<List<MediaItemModel>>
+//            = _recommendedSongs
+
+//    val recommendedSongs = RecommendationManager.recommendedSongs
 
     private val _continueListeningList =
         MutableStateFlow<List<MediaItemModel>>(emptyList())
@@ -90,6 +108,69 @@ class HomeViewModel(
 
     val videoSearchQuery: StateFlow<String>
             = _videoSearchQuery
+
+    private val _playlists =
+        MutableStateFlow<List<PlaylistModel>>(emptyList())
+
+    val playlists: StateFlow<List<PlaylistModel>>
+            = _playlists
+
+
+
+    fun createPlaylist(name: String) {
+
+        if (name.isBlank()) return
+
+        val current = _playlists.value.toMutableList()
+
+        val alreadyExists =
+            current.any {
+                it.name == name
+            }
+
+        if (!alreadyExists) {
+
+            current.add(
+                PlaylistModel(name = name)
+            )
+
+            _playlists.value = current
+        }
+    }
+
+    fun saveSongsToPlaylist(
+        playlistName: String,
+        mediaIds: List<Long>
+    ) {
+        if (playlistName.isBlank())return
+        _playlists.value =
+            _playlists.value.map { playlist ->
+
+                if (playlist.name == playlistName) {
+
+                    playlist.copy(
+                        mediaIds = mediaIds.distinct()
+                    )
+
+                } else {
+                    playlist
+                }
+            }
+    }
+    fun getPlaylistSongs(
+        playlistName: String
+    ): List<MediaItemModel> {
+
+        val playlist =
+            _playlists.value.find {
+                it.name == playlistName
+            }
+
+        return _allMediaList.value.filter { media ->
+
+            playlist?.mediaIds?.contains(media.id) == true
+        }
+    }
 
     fun setVideoFilter(filter: String) {
 
@@ -143,6 +224,25 @@ class HomeViewModel(
                 }
             }
         _filteredSongs.value = _filteredSongs.value.toList()
+    }
+
+    fun markRecommendationViewed(songId: Long) {
+
+        _allMediaList.value =
+            _allMediaList.value.map {
+
+                if (it.id == songId) {
+                    it.copy(
+                        isNewRecommendation = false
+                    )
+                } else {
+                    it
+                }
+            }
+
+        viewModelScope.launch {
+            repo.markAsViewed(songId)
+        }
     }
 
 
@@ -233,6 +333,39 @@ class HomeViewModel(
 //        }
 //    }
 
+    fun syncRecommendedSong(
+        media: MediaItemModel
+    ) {
+
+        val exists =
+            _allMediaList.value.any {
+                it.id == media.id
+            }
+
+        if (!exists) {
+
+            _allMediaList.value =
+                listOf(media) + _allMediaList.value
+
+        } else {
+
+            _allMediaList.value =
+                _allMediaList.value.map {
+
+                    if (it.id == media.id) {
+
+                        it.copy(
+                            isNewRecommendation =
+                                media.isNewRecommendation
+                        )
+
+                    } else {
+                        it
+                    }
+                }
+        }
+    }
+
 
     fun loadMedia() {
         if(isLoaded) return
@@ -255,6 +388,58 @@ class HomeViewModel(
 
             updateHomeSections()
             applyVideoFilters()
+
+            repo.clearAll()
+//
+//            _allMediaList.value
+//                .filter {
+//                    it.mediaType == MediaType.AUDIO
+//                }
+//                .take(5).forEach { media ->
+//                viewModelScope.launch {
+//                    repo.addRecommendation(
+//                        RecommendedSongEntity(
+//                            id = media.id ?: 0L,
+//                            title = media.title ?: "",
+//                            artist = media.artist ?: "",
+//                            songUrl = media.uri.toString(),
+//                            thumbnailUrl = media.thumbnailUri.toString(),
+//                            isNewRecommendation = false
+//                        )
+//                    )
+//                }
+//            }
+            _allMediaList.value
+                .filter {
+                    it.mediaType == MediaType.AUDIO
+                }
+                .take(5)
+                .forEach { media ->
+
+                    viewModelScope.launch {
+
+                        repo.addRecommendation(
+                            RecommendedSongEntity(
+                                id = media.id ?: 0L,
+                                title = media.title ?: "",
+                                artist = media.artist ?: "",
+                                songUrl = media.uri.toString(),
+                                thumbnailUrl = media.thumbnailUri.toString(),
+                                isNewRecommendation = false
+                            )
+                        )
+                    }
+                }
+
+
+
+//            _allMediaList.value.firstOrNull()?.let {media ->
+//                RecommendationManager.addRecommendation(
+//                    media.copy(
+//                        isNewRecommendation = true
+//                    )
+//                )
+//            }
 
 
         }
@@ -281,11 +466,11 @@ class HomeViewModel(
                 .sortedByDescending { it.playedAt }
                 .take(5)
 
-        _recommendedSongs.value =
-            _allMediaList.value
-                .filter { it.mediaType == MediaType.AUDIO }
-                .sortedBy { it.id }
-                .take(6)
+//        _recommendedSongs.value =
+//            _allMediaList.value
+//                .filter { it.mediaType == MediaType.AUDIO }
+//                .sortedBy { it.id }
+//                .take(6)
 
         _trendingVideos.value =
             _allMediaList.value
@@ -303,6 +488,11 @@ class HomeViewModel(
 
         _favoriteSongs.value =
             _allMediaList.value.filter { it.isFav }
+
+        _historyList.value =
+            _allMediaList.value
+                .filter { it.playedAt > 0L }
+                .sortedByDescending { it.playedAt }
     }
     fun toggleFavorite(media: MediaItemModel): MediaItemModel {
 
@@ -327,6 +517,14 @@ class HomeViewModel(
         applySongFilters()
         applyVideoFilters()
         updateHomeSections()
+
+        viewModelScope.launch {
+            repo.updateFavorite(
+                id = updatedMedia.id ?: return@launch,
+                isFav = updatedMedia.isFav
+            )
+        }
+//        RecommendationManager.updateRecommendation(updatedMedia)
 
         return updatedMedia
     }

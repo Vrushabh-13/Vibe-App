@@ -1,9 +1,11 @@
 package com.vrushabhgaikar.vibeplayer.presentation.player
 
+import PlayerManager
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
+import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
 import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class PlayerViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val playerManager = PlayerManager(application)
+//    private val playerManager = PlayerManager(application)
 
 
     private val _playerState = MutableStateFlow(PlayerUiState())
@@ -24,18 +26,43 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         observeProgress()
     }
 
-    fun onMediaSelected(media: MediaItemModel){
-        playerManager.play(media)
+//    fun onMediaSelected(media: MediaItemModel){
+//      playerManager.play(media)
+//        PlayerManager.initialize(getApplication()) {
+//
+//            PlayerManager.play(media)
+//
+//        }
+//        if (media.playedDuration > 0L) {
+//            PlayerManager.seekTo(media.playedDuration)
+//        }
+//        _playerState.value = _playerState.value.copy(
+//            currentMedia = media,
+//            isMiniPlayerVisible = true,
+//            isPlaying = true
+//        )
+//    }
+
+    fun onMediaSelected(media: MediaItemModel) {
+
+        PlayerManager.initialize(getApplication()) {
+            PlayerManager.play(media)
+        }
 
         if (media.playedDuration > 0L) {
-            playerManager.seekTo(media.playedDuration)
+            PlayerManager.seekTo(media.playedDuration)
         }
+
         _playerState.value = _playerState.value.copy(
             currentMedia = media,
+
             isMiniPlayerVisible = true,
+
+
             isPlaying = true
         )
     }
+
     fun syncFavorite(mediaId: Long, homeViewModel: HomeViewModel) {
         val updated = homeViewModel.getMediaById(mediaId)
         updated?.let {
@@ -46,14 +73,14 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun togglePlayPause(){
-        if(playerManager.isPlaying()){
-            playerManager.pause()
+        if(PlayerManager.isPlaying()){
+            PlayerManager.pause()
         }else{
-            playerManager.resume()
+            PlayerManager.resume()
         }
 
         _playerState.value = _playerState.value.copy(
-                isPlaying = playerManager.isPlaying()
+                isPlaying = PlayerManager.isPlaying()
         )
     }
 
@@ -64,19 +91,19 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun seekTo(progress: Float){
-        val duration = playerManager.duration()
+        val duration = PlayerManager.duration()
         val newPosition = (progress * duration).toLong()
-        playerManager.seekTo(newPosition)
+        PlayerManager.seekTo(newPosition)
     }
 
     fun seekForward10(){
-        val newPos = playerManager.currentPosition() + 10_000
-        playerManager.seekTo(newPos)
+        val newPos = PlayerManager.currentPosition() + 10_000
+        PlayerManager.seekTo(newPos)
     }
 
     fun seekBackward10(){
-        val newPos = playerManager.currentPosition() - 10_000
-        playerManager.seekTo(newPos.coerceAtLeast(0))
+        val newPos = PlayerManager.currentPosition() - 10_000
+        PlayerManager.seekTo(newPos.coerceAtLeast(0))
     }
 
 //    fun toggleLike(){
@@ -107,7 +134,7 @@ fun updatedCurrentMedia(media: MediaItemModel){
     fun toggleRepeat(){
 
         val enabled = !_playerState.value.isRepeatEnabled
-        playerManager.setRepeatMode(enabled)
+        PlayerManager.setRepeatMode(enabled)
         _playerState.value = _playerState.value.copy(
             isRepeatEnabled = enabled
         )
@@ -118,8 +145,8 @@ fun updatedCurrentMedia(media: MediaItemModel){
         viewModelScope.launch {
             while (true) {
 
-                val currentPosition = playerManager.currentPosition()
-                val duration = playerManager.duration()
+                val currentPosition = PlayerManager.currentPosition()
+                val duration = PlayerManager.duration()
                 val currentMedia = _playerState.value.currentMedia
                 val updatedMedia = currentMedia?.copy(
                     playedDuration = currentPosition,
@@ -129,16 +156,32 @@ fun updatedCurrentMedia(media: MediaItemModel){
                     currentPosition = currentPosition,
                     duration = duration,
                     currentMedia = updatedMedia,
-                    isPlaying = playerManager.isPlaying()
+                    isPlaying = PlayerManager.isPlaying()
                 )
                 delay(500)
             }
         }
     }
-    override fun onCleared() {
-            super.onCleared()
-            playerManager.release()
+
+    fun openVideoFullScreen() {
+
+        _playerState.value =
+            _playerState.value.copy(
+
+                isVideoFullScreen = true,
+
+                isFullPlayerVisible = false
+            )
     }
+
+    fun closeVideoFullScreen() {
+
+        _playerState.value =
+            _playerState.value.copy(
+                isVideoFullScreen = false
+            )
+    }
+
 
 
 

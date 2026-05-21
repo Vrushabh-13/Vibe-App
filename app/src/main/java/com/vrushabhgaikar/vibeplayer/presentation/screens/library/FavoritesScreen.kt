@@ -1,4 +1,4 @@
-package com.vrushabhgaikar.vibeplayer.presentation.screens
+package com.vrushabhgaikar.vibeplayer.presentation.screens.library
 
 import AppVideoListItem
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppTopBar
@@ -13,6 +13,7 @@ import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeViewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
 import com.vrushabhgaikar.vibeplayer.presentation.components.VerticalSpacer
 import com.vrushabhgaikar.vibeplayer.presentation.screens.songs.components.SongListItem
@@ -21,7 +22,9 @@ import com.vrushabhgaikar.vibeplayer.ui.theme.PurpleGradient
 
 
 @Composable
-fun FavoritesScreen(viewModel: HomeViewModel, onBack: () -> Unit) {
+fun FavoritesScreen(viewModel: HomeViewModel,
+                    onSongClick: (MediaItemModel) -> Unit,
+                    onBack: () -> Unit) {
 
     val allMedia = viewModel.allMediaList.collectAsState()
 
@@ -46,19 +49,15 @@ fun FavoritesScreen(viewModel: HomeViewModel, onBack: () -> Unit) {
         }
         item{ VerticalSpacer(20.dp) }
         items(favList, key = { it.id!! }){media ->
-            if(media.mediaType == MediaType.AUDIO){
                 SongListItem(
                     media = media,
-                    onClick = {},
+                    onClick = {
+                        viewModel.updatePlayedMedia(media)
+                        onSongClick(media)
+                    },
                     onFavClick = {viewModel.toggleFavorite(media)}
                 )
-            }else{
-                AppVideoListItem(
-                    media = media,
-                    onClick = {},
-                    onIsFavClick = {viewModel.toggleFavorite(media)}
-                )
-            }
+
 
         }
 

@@ -11,5 +11,6 @@ data class PlayerUiState(
     val progress: Float = 0f,
     val duration: Long = 0L,
     val currentPosition: Long = 0L,
-    val isRepeatEnabled: Boolean = false
+    val isRepeatEnabled: Boolean = false,
+    val isVideoFullScreen: Boolean = false
 )

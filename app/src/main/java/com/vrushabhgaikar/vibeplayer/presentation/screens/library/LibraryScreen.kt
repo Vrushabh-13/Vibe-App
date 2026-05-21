@@ -1,120 +1,456 @@
 package com.vrushabhgaikar.vibeplayer.presentation.screens.library
 
-import AppTopBar
-
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppTopBar
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import com.vrushabhgaikar.vibeplayer.R
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.vrushabhgaikar.vibeplayer.data.model.Song
-import com.vrushabhgaikar.vibeplayer.ui.theme.BlackBg
-import com.vrushabhgaikar.vibeplayer.presentation.screens.library.components.QuickActionCard
-import com.vrushabhgaikar.vibeplayer.R
-import com.vrushabhgaikar.vibeplayer.navigation.Routes
-import com.vrushabhgaikar.vibeplayer.presentation.components.AppSearchBar
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppIcon
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppImage
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppSectionTitle
 import com.vrushabhgaikar.vibeplayer.presentation.components.VerticalSpacer
 import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeViewModel
+import com.vrushabhgaikar.vibeplayer.presentation.screens.library.components.QuickActionCard
+import com.vrushabhgaikar.vibeplayer.ui.theme.BlackBg
+import com.vrushabhgaikar.vibeplayer.ui.theme.CardBg
+import com.vrushabhgaikar.vibeplayer.ui.theme.White
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.collectAsState
+import com.vrushabhgaikar.vibeplayer.navigation.Routes
 import com.vrushabhgaikar.vibeplayer.presentation.screens.library.components.PlaylistCard
 
 @Composable
-fun LibraryScreen(viewModel: HomeViewModel,
-                  navController: NavHostController,
-                  onOpenFavorites: () -> Unit){
+fun LibraryScreen(
+    viewModel: HomeViewModel,
+    navController: NavHostController,
+    onOpenFavorites: () -> Unit,
+    onOpenHistory: () -> Unit
+) {
 
-    val list = viewModel.allMediaList.collectAsState()
-//    val playlistList = remember{
-//        arrayListOf(
-//            Song(R.drawable.song2, "Night Drive", "24 songs"),
-//            Song(R.drawable.img_music_thumb, "Chill Vibes", "18 songs"),
-//            Song(R.drawable.song2, "Workout Mix", "20 songs")
-//        )
-//    }
-    LazyColumn(
+    var showDialog by remember { mutableStateOf(false) }
+    var playlistName by remember { mutableStateOf("") }
+    val playlistList =
+        viewModel.playlists.collectAsState().value
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(BlackBg),
-        contentPadding = PaddingValues(bottom = 100.dp)
+            .background(BlackBg)
     ) {
-        item{AppTopBar("Library")
-             }
+        AppTopBar("Library")
+        LazyColumn(
+            modifier = Modifier.weight(1f),
+            contentPadding = PaddingValues(bottom = 16.dp)
+        ) {
 
-        item { VerticalSpacer(12.dp) }
 
-//        item { AppSearchBar() }
+            item { VerticalSpacer(12.dp) }
 
-        item { VerticalSpacer(16.dp) }
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    QuickActionCard(
+                        modifier = Modifier.weight(1f),
+                        icon = painterResource(id = R.drawable.ic_like) ,
+                       title = stringResource(R.string.favourites),
+                        onClick = onOpenFavorites
+                    )
 
-        item{
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ){
-                QuickActionCard(
-                    modifier = Modifier.weight(1f),
-                    icon = painterResource(id = R.drawable.ic_like) ,
-                    title = stringResource(R.string.favourites),
-                    onClick = onOpenFavorites
-                )
-
-                QuickActionCard(
-                    modifier = Modifier.weight(1f),
-                    icon = painterResource(id = R.drawable.ic_playlist),
-                    title = stringResource(R.string.playlists)
-                )
-
-                QuickActionCard(
-                    modifier = Modifier.weight(1f),
-                    icon = painterResource(id = R.drawable.ic_download),
-                    title = stringResource(R.string.downloads)
-                )
-
-                QuickActionCard(
-                    modifier = Modifier.weight(1f),
-                    icon = painterResource(id = R.drawable.ic_recent),
-                    title = stringResource(R.string.recent)
-                )
-            }
-        }
-        item { VerticalSpacer(20.dp) }
-
-        item { AppSectionTitle(stringResource(R.string.my_playlists)) }
-
-        item{
-            LazyRow(
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(list.value){media ->
-                    PlaylistCard(media)
+                    QuickActionCard(
+                        modifier = Modifier.weight(1f),
+                        icon = painterResource(id = R.drawable.ic_recent),
+                        title = stringResource(R.string.history),
+                        onClick = onOpenHistory
+                    )
                 }
             }
+
+            item { VerticalSpacer(20.dp) }
+
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AppSectionTitle(
+                        stringResource(R.string.my_playlists),
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    AppIcon(
+                        painter = painterResource(id = R.drawable.ic_add_button),
+                        contentDescription = null,
+                        tint = White,
+                        modifier = Modifier.clickable {
+                            showDialog = true
+                        }
+                    )
+                }
+            }
+
+            item {
+                if (playlistList.isEmpty()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        AppImage(
+                            painter = painterResource(id = R.drawable.img_notfound),
+                            contentDescription = null,
+                            modifier = Modifier.size(120.dp)
+                        )
+
+                        Spacer(modifier = Modifier.padding(8.dp))
+
+                        Text(
+                            text = "No playlists created",
+                            color = White
+                        )
+                    }
+                }
+            }
+
+            // ✅ SAFE GRID (MANUAL 2 COLUMN ROW)
+            items(playlistList.chunked(2)) { rowItems ->
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+
+                    rowItems.forEach { playlist ->
+                        PlaylistCard(name = playlist.name,
+                            songCount = playlist.mediaIds.size,
+                            onClick = {
+                                navController.navigate(
+
+                                    "${Routes.PLAYLIST_DETAILS}/${playlist.name}"
+                                )
+                            },
+                            onEditClick = {
+                                navController.navigate(
+                                    "playlist_edit/${playlist.name}"
+                                )
+                            }
+                        )
+
+                    }
+
+                    // balance row if only 1 item
+                    if (rowItems.size == 1) {
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+            }
         }
 
-        item{VerticalSpacer(20.dp)}
+        // ---------------- DIALOG ----------------
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                containerColor = CardBg,
+                title = { Text("Create Playlist", color = White) },
+                text = {
+                    Column {
+                        Text("Enter playlist name", color = White)
 
-//        item{AppSectionTitle(stringResource(R.string.my_videos))}
-//
-//        items(playlistList){
-//            AppVideoListItem(it)
-//
-//        }
+                        Spacer(modifier = Modifier.padding(8.dp))
 
+                        OutlinedTextField(
+                            value = playlistName,
+                            onValueChange = { playlistName = it },
+                            placeholder = { Text("Playlist name") }
+                        )
+                    }
+                },
+                confirmButton = {
+                    Text(
+                        text = "Create",
+                        color = White,
+                        modifier = Modifier.clickable {
+                            if (playlistName.isNotBlank()) {
+                                viewModel.createPlaylist(playlistName)
+                            }
+                            playlistName = ""
+                            showDialog = false
+                        }
+                    )
+                },
+                dismissButton = {
+                    Text(
+                        text = "Cancel",
+                        color = White,
+                        modifier = Modifier.clickable {
+                            playlistName = ""
+                            showDialog = false
+                        }
+                    )
+                }
+            )
+        }
     }
 }
+
+
+
+//package com.vrushabhgaikar.vibeplayer.presentation.screens.library
+//
+//import AppTopBar
+//import android.R.attr.tint
+//
+//import androidx.compose.foundation.background
+//import androidx.compose.foundation.clickable
+//import androidx.compose.foundation.layout.Arrangement
+//import androidx.compose.foundation.layout.Column
+//import androidx.compose.foundation.layout.PaddingValues
+//import androidx.compose.foundation.layout.Row
+//import androidx.compose.foundation.layout.Spacer
+//import androidx.compose.foundation.layout.fillMaxSize
+//import androidx.compose.foundation.layout.fillMaxWidth
+//import androidx.compose.foundation.layout.padding
+//import androidx.compose.foundation.layout.size
+//import androidx.compose.foundation.lazy.LazyColumn
+//import androidx.compose.foundation.lazy.grid.GridCells
+//import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+//import androidx.compose.foundation.lazy.grid.items
+//import androidx.compose.material3.AlertDialog
+//import androidx.compose.material3.OutlinedTextField
+//import androidx.compose.material3.Text
+//import androidx.compose.material3.TextFieldDefaults
+//import androidx.compose.runtime.Composable
+//import androidx.compose.runtime.collectAsState
+//import androidx.compose.runtime.getValue
+//import androidx.compose.runtime.mutableStateOf
+//import androidx.compose.runtime.remember
+//import androidx.compose.runtime.setValue
+//import androidx.compose.ui.Alignment
+//import androidx.compose.ui.Modifier
+//import androidx.compose.ui.res.painterResource
+//import androidx.compose.ui.res.stringResource
+//import androidx.compose.ui.unit.dp
+//import androidx.navigation.NavHostController
+//import androidx.wear.compose.material.placeholder
+//import com.vrushabhgaikar.vibeplayer.ui.theme.BlackBg
+//import com.vrushabhgaikar.vibeplayer.presentation.screens.library.components.QuickActionCard
+//import com.vrushabhgaikar.vibeplayer.R
+//import com.vrushabhgaikar.vibeplayer.presentation.components.AppIcon
+//import com.vrushabhgaikar.vibeplayer.presentation.components.AppImage
+//import com.vrushabhgaikar.vibeplayer.presentation.components.AppSectionTitle
+//import com.vrushabhgaikar.vibeplayer.presentation.components.VerticalSpacer
+//import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeViewModel
+//import com.vrushabhgaikar.vibeplayer.presentation.screens.library.components.PlaylistCard
+//import com.vrushabhgaikar.vibeplayer.ui.theme.CardBg
+//import com.vrushabhgaikar.vibeplayer.ui.theme.White
+//
+//@Composable
+//fun LibraryScreen(viewModel: HomeViewModel,
+//                  navController: NavHostController,
+//                  onOpenFavorites: () -> Unit){
+//
+//    val list = viewModel.allMediaList.collectAsState()
+//    var showDialog by remember {
+//        mutableStateOf(false)
+//    }
+//    var playlistName by remember {
+//        mutableStateOf("")
+//    }
+//    var playlistList by remember {
+//        mutableStateOf(listOf<String>())
+//    }
+//
+////    val playlistList = remember{
+////        arrayListOf(
+////            Song(R.drawable.song2, "Night Drive", "24 songs"),
+////            Song(R.drawable.img_music_thumb, "Chill Vibes", "18 songs"),
+////            Song(R.drawable.song2, "Workout Mix", "20 songs")
+////        )
+////    }
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(BlackBg)
+//    ) {
+//        LazyColumn(
+//            modifier = Modifier
+//                .fillMaxSize(),
+//            contentPadding = PaddingValues(bottom = 16.dp)
+//        ) {
+//            item{AppTopBar("Library") }
+//
+//            item { VerticalSpacer(12.dp) }
+//
+//            item { VerticalSpacer(16.dp) }
+//
+//            item{
+//                Row(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 16.dp),
+//                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+//                ){
+//                    QuickActionCard(
+//                        modifier = Modifier.weight(1f),
+//                        icon = painterResource(id = R.drawable.ic_like) ,
+//                        title = stringResource(R.string.favourites),
+//                        onClick = onOpenFavorites
+//                    )
+//
+//                    QuickActionCard(
+//                        modifier = Modifier.weight(1f),
+//                        icon = painterResource(id = R.drawable.ic_recent),
+//                        title = stringResource(R.string.recent)
+//                    )
+//                }
+//            }
+//            item { VerticalSpacer(20.dp) }
+//
+//            item {
+//                Row(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 16.dp),
+//                    horizontalArrangement = Arrangement.SpaceBetween,
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    AppSectionTitle(stringResource(R.string.my_playlists),
+//                        modifier = Modifier.weight(1f))
+//
+//                    AppIcon(
+//                        painter = painterResource(id = R.drawable.ic_add_button),
+//                        contentDescription = null,
+//                        tint = White,
+//                        modifier = Modifier.clickable{
+//                            showDialog = true
+//                        }
+//                    )
+//
+//                }
+//            }
+//            item {
+//                if (playlistList.isEmpty()) {
+//
+//                    // EMPTY STATE UI
+//                    Column(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(32.dp),
+//                        horizontalAlignment = Alignment.CenterHorizontally
+//                    ) {
+//
+//                        AppImage(
+//                            painter = painterResource(id = R.drawable.img_notfound),
+//                            contentDescription = null,
+//                            modifier = Modifier.size(120.dp)
+//                        )
+//
+//                        Spacer(modifier = Modifier.padding(8.dp))
+//
+//                        Text(
+//                            text = "No playlists created",
+//                            color = White
+//                        )
+//                    }
+//
+//                }
+//            }
+//            item {
+//                if (playlistList.isNotEmpty()) {
+//                    LazyVerticalGrid(
+//                        columns = GridCells.Fixed(2),
+//                        modifier = Modifier
+//                            .weight(1f)
+//                            .padding(horizontal = 16.dp),
+//                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+//                        verticalArrangement = Arrangement.spacedBy(12.dp)
+//                    ) {
+//                        items(playlistList) { playlist ->
+//                            PlaylistCard(playlist)
+//                        }
+//                    }
+//                }
+//                if (showDialog) {
+//                    AlertDialog(
+//                        onDismissRequest = { showDialog = false },
+//                        containerColor = CardBg,
+//                        title = { Text("Create Playlist", color = White) },
+//                        text = {
+//                            Column {
+//                                Text("Enter playlist name", color = White)
+//
+//                                Spacer(modifier = Modifier.padding(8.dp))
+//
+//                                OutlinedTextField(
+//                                    value = playlistName,
+//                                    onValueChange = { playlistName = it },
+//                                    placeholder = { Text("Playlist name") }
+//                                )
+//                            }
+//                        },
+//                        confirmButton = {
+//                            Text(
+//                                text = "Create",
+//                                modifier = Modifier.clickable {
+//
+//                                    if (playlistName.isNotBlank()) {
+//                                        playlistList = playlistList + playlistName
+//                                    }
+//
+//                                    playlistName = ""
+//                                    showDialog = false
+//                                },
+//                                color = White
+//                            )
+//                        },
+//                        dismissButton = {
+//                            Text(
+//                                text = "Cancel",
+//                                modifier = Modifier.clickable {
+//                                    playlistName = ""
+//                                    showDialog = false
+//                                },
+//                                color = White
+//                            )
+//                        }
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}

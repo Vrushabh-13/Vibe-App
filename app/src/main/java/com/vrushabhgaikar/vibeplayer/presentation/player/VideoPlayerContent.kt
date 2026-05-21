@@ -3,6 +3,7 @@ package com.vrushabhgaikar.vibeplayer.presentation.player
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,27 +35,36 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.ui.PlayerView
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.vrushabhgaikar.vibeplayer.R
 import com.vrushabhgaikar.vibeplayer.domain.model.PlaceholderType
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppIcon
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppImage
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppText
 import com.vrushabhgaikar.vibeplayer.ui.theme.BlackBg
 import com.vrushabhgaikar.vibeplayer.ui.theme.LightGray
 import com.vrushabhgaikar.vibeplayer.ui.theme.PurplePrimary
 import com.vrushabhgaikar.vibeplayer.ui.theme.White
+import com.vrushabhgaikar.vibeplayer.utils.TimeUtils
 
 @Composable
 fun VideoPlayerContent(
-    uiState: PlayerUiState
+    navController: NavHostController,
+    uiState: PlayerUiState,
+    onSeek: (Float) -> Unit,
+    onPlayPause: () -> Unit,
+    onForward10: () -> Unit,
+    onBack10: () -> Unit,
+    onFullScreen: () -> Unit,
+    isFav: () -> Unit
 ) {
 
-//    AndroidView(
-//        factory = {context ->
-//            PlayerView(context).apply {
-//                player = viewModel { }
-//            }
-//        }
-//    )
+
+    val progress =
+        if (uiState.duration > 0)
+            uiState.currentPosition.toFloat() / uiState.duration.toFloat()
+        else 0f
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -108,12 +118,17 @@ fun VideoPlayerContent(
                         shape = RoundedCornerShape(11)
                     )
             ){
-                AppImage(
-                    model = uiState.currentMedia?.thumbnailUri,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize(),
-                    placeholderType = PlaceholderType.VIDEO
+                AndroidView(
+                    factory = { context ->
+
+                        PlayerView(context).apply {
+
+                            player = PlayerManager.getController()
+
+                            useController = false
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
@@ -126,15 +141,15 @@ fun VideoPlayerContent(
             )
 
             // 🔹 More menu
-            Icon(
-                painterResource(id = R.drawable.ic_menu),
-                null,
-                tint = White,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(16.dp)
-                    .size(28.dp)
-            )
+//            Icon(
+//                painterResource(id = R.drawable.ic_menu),
+//                null,
+//                tint = White,
+//                modifier = Modifier
+//                    .align(Alignment.TopEnd)
+//                    .padding(16.dp)
+//                    .size(28.dp)
+//            )
 
             // 🔹 Playback controls
             Row(
@@ -152,6 +167,9 @@ fun VideoPlayerContent(
                     null,
                     tint = White,
                     modifier = Modifier.size(44.dp)
+                        .clickable{
+                            onBack10()
+                        }
                 )
 
                 // play pause
@@ -175,7 +193,9 @@ fun VideoPlayerContent(
                         contentDescription = null,
                         tint = White,
                         modifier = Modifier.size(48.dp)
+                            .clickable{onPlayPause()}
                     )
+
                 }
 
                 // forward
@@ -184,6 +204,7 @@ fun VideoPlayerContent(
                     null,
                     tint = White,
                     modifier = Modifier.size(44.dp)
+                        .clickable{onForward10()}
                 )
             }
 
@@ -199,8 +220,11 @@ fun VideoPlayerContent(
             ) {
 
                 Slider(
-                    value = 0.4f,
-                    onValueChange = {},
+                    value = progress,
+                    onValueChange = { newValue ->
+                        val newPosition = (newValue * uiState.duration).toLong()
+                        PlayerManager.seekTo(newPosition)
+                    },
                     colors = SliderDefaults.colors(
                         thumbColor = PurplePrimary,
                         activeTrackColor = PurplePrimary,
@@ -214,14 +238,14 @@ fun VideoPlayerContent(
                 ) {
 
                     Text(
-                        "01:24",
+                        text = TimeUtils.formatDuration(uiState.currentPosition),
                         color = White
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        "04:12",
+                        text = TimeUtils.formatDuration(uiState.duration),
                         color = White
                     )
 
@@ -230,7 +254,12 @@ fun VideoPlayerContent(
                     Icon(
                         painterResource(id = R.drawable.ic_fullscreen),
                         null,
-                        tint = White
+                        tint = White,
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable{
+                                onFullScreen()
+                            }
                     )
                 }
             }
@@ -238,9 +267,6 @@ fun VideoPlayerContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // ===================================================
-        // VIDEO INFO
-        // ===================================================
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -254,7 +280,7 @@ fun VideoPlayerContent(
                 AppText(
                     text = uiState.currentMedia?.title ?: "",
                     color = White,
-                    fontSize = 26.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
 
@@ -263,7 +289,7 @@ fun VideoPlayerContent(
                 Text(
                     text = uiState.currentMedia?.artist ?: "",
                     color = LightGray,
-                    fontSize = 18.sp
+                    fontSize = 15.sp
                 )
             }
 
@@ -279,91 +305,102 @@ fun VideoPlayerContent(
                 contentAlignment = Alignment.Center
             ) {
 
-                Icon(
-                    painterResource(id = R.drawable.ic_like),
-                    null,
-                    tint = PurplePrimary
+                AppIcon(
+                    painter = painterResource(if(uiState.currentMedia?.isFav == true)
+                        R.drawable.ic_heart_fill
+                    else
+                        R.drawable.ic_like),
+                    contentDescription = null,
+                    tint = if(uiState.currentMedia?.isFav == true)
+                        PurplePrimary
+                    else
+                        LightGray,
+                    modifier = Modifier.size(38.dp)
+                        .clip(shape = CircleShape)
+                        .clickable{
+                            isFav()
+                        }
                 )
             }
 
-            Spacer(modifier = Modifier.width(12.dp))
+//            Spacer(modifier = Modifier.width(12.dp))
 
             // download
-            Box(
-                modifier = Modifier
-                    .size(58.dp)
-                    .background(
-                        MaterialTheme.colorScheme.background,
-                        CircleShape
-                    ),
+//            Box(
+//                modifier = Modifier
+//                    .size(58.dp)
+//                    .background(
+//                        MaterialTheme.colorScheme.background,
+//                        CircleShape
+//                    ),
+//
+//                contentAlignment = Alignment.Center
+//            ) {
+//
+//                Icon(
+//                    painterResource(id = R.drawable.ic_download),
+//                    null,
+//                    tint = White
+//                )
+//            }
+       }
 
-                contentAlignment = Alignment.Center
-            ) {
-
-                Icon(
-                    painterResource(id = R.drawable.ic_download),
-                    null,
-                    tint = White
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
+//        Spacer(modifier = Modifier.height(24.dp))
 
         // ===================================================
         // DESCRIPTION CARD
         // ===================================================
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    MaterialTheme.colorScheme.background,
-                    RoundedCornerShape(20.dp)
-                )
-                .padding(18.dp)
-        ) {
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Icon(
-                    painterResource(id = R.drawable.ic_calender),
-                    null,
-                    tint = LightGray,
-                    modifier = Modifier.size(18.dp)
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Text(
-                    "Premiered on 12 May 2024",
-                    color = LightGray
-                )
-            }
-
-            Spacer(modifier = Modifier.height(18.dp))
-
-            Text(
-                text =
-                    "Presenting Midnight Live by Arijit Singh. " +
-                            "A soul-stirring live performance full of emotions and memories.",
-
-                color = White.copy(alpha = 0.85f),
-
-                lineHeight = 24.sp
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Text(
-                "Show more",
-                color = PurplePrimary,
-                fontSize = 18.sp
-            )
-        }
-
-        Spacer(modifier = Modifier.height(30.dp))
+//        Column(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .background(
+//                    MaterialTheme.colorScheme.background,
+//                    RoundedCornerShape(20.dp)
+//                )
+//                .padding(18.dp)
+//        ) {
+//
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//
+//                Icon(
+//                    painterResource(id = R.drawable.ic_calender),
+//                    null,
+//                    tint = LightGray,
+//                    modifier = Modifier.size(18.dp)
+//                )
+//
+//                Spacer(modifier = Modifier.width(8.dp))
+//
+//                Text(
+//                    "Premiered on 12 May 2024",
+//                    color = LightGray
+//                )
+//            }
+//
+//            Spacer(modifier = Modifier.height(18.dp))
+//
+//            Text(
+//                text =
+//                    "Presenting Midnight Live by Arijit Singh. " +
+//                            "A soul-stirring live performance full of emotions and memories.",
+//
+//                color = White.copy(alpha = 0.85f),
+//
+//                lineHeight = 24.sp
+//            )
+//
+//            Spacer(modifier = Modifier.height(20.dp))
+//
+//            Text(
+//                "Show more",
+//                color = PurplePrimary,
+//                fontSize = 18.sp
+//            )
+//        }
+//
+       Spacer(modifier = Modifier.height(100.dp))
     }
 }

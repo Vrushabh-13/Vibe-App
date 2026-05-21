@@ -14,5 +14,6 @@ data class MediaItemModel(
     val isPlaying: Boolean = false,
     val mediaType: MediaType = MediaType.AUDIO,
     val sourceType: SourceType = SourceType.OFFLINE,
-    val playedAt: Long = 0L
+    val playedAt: Long = 0L,
+    val isNewRecommendation: Boolean = false
 )

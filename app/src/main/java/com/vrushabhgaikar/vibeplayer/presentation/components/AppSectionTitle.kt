@@ -17,10 +17,11 @@ import com.vrushabhgaikar.vibeplayer.ui.theme.White
 @Composable
 fun AppSectionTitle(
     title: String,
-    onViewAllClick: () -> Unit = {}
+    onViewAllClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ){
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,

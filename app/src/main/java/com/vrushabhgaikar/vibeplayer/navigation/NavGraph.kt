@@ -1,15 +1,20 @@
 package com.vrushabhgaikar.vibeplayer.navigation
 
-import com.vrushabhgaikar.vibeplayer.presentation.screens.FavoritesScreen
+import com.vrushabhgaikar.vibeplayer.presentation.screens.library.FavoritesScreen
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
 import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeScreen
 import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeViewModel
+import com.vrushabhgaikar.vibeplayer.presentation.screens.library.HistoryScreen
 import com.vrushabhgaikar.vibeplayer.presentation.screens.library.LibraryScreen
+import com.vrushabhgaikar.vibeplayer.presentation.screens.library.PlaylistDetailsScreen
+import com.vrushabhgaikar.vibeplayer.presentation.screens.library.PlaylistSelectionScreen
 import com.vrushabhgaikar.vibeplayer.presentation.screens.songs.SongsScreen
+import com.vrushabhgaikar.vibeplayer.presentation.screens.video.VideoFullScreen
 import com.vrushabhgaikar.vibeplayer.presentation.screens.video.VideoScreen
 
 
@@ -17,7 +22,8 @@ import com.vrushabhgaikar.vibeplayer.presentation.screens.video.VideoScreen
 fun NavGraph(navController: NavHostController,
              homeViewModel: HomeViewModel,
              onSongClick: (MediaItemModel) -> Unit,
-             onMediaUpdated: (MediaItemModel) -> Unit){
+             onMediaUpdated: (MediaItemModel) -> Unit,
+             onCloseVideoFullScreen: () -> Unit){
 
     NavHost(
         navController = navController,
@@ -54,17 +60,73 @@ fun NavGraph(navController: NavHostController,
                 navController = navController,
                 onOpenFavorites = {
                     navController.navigate(Routes.FAVORITES)
-                })
+                },
+                onOpenHistory = {
+                    navController.navigate(Routes.HISTORY)
+                }
+            )
         }
 
         composable(Routes.FAVORITES) {
             FavoritesScreen(
                 viewModel = homeViewModel,
+                onSongClick = onSongClick,
                 onBack = {
                     navController.popBackStack()
                 }
             )
         }
+        composable(Routes.HISTORY){
+            HistoryScreen(
+                viewModel = homeViewModel,
+                onSongClick = onSongClick,
+                onBack = {
+                    navController.popBackStack()
+                },
+                onMediaUpdated = onMediaUpdated
+            )
+
+        }
+
+        composable(
+            route = "${Routes.PLAYLIST_DETAILS}/{playlistName}"
+        ) { backStackEntry ->
+
+            val playlistName =
+                backStackEntry.arguments?.getString("playlistName") ?: ""
+
+            PlaylistDetailsScreen(
+                viewModel = homeViewModel,
+                playlistName = playlistName,
+                onBack = {
+                    navController.popBackStack()
+                },
+                onSongClick = onSongClick,
+                onMediaUpdated = onMediaUpdated
+            )
+        }
+
+        composable(
+            route = "${Routes.PLAYLIST_EDIT}/{playlistName}"
+        ) { backStackEntry ->
+
+            val playlistName =
+                backStackEntry.arguments?.getString("playlistName") ?: ""
+
+            PlaylistSelectionScreen(
+                viewModel = homeViewModel,
+                playlistName = playlistName,
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.VIDEO_FULLSCREEN){
+            VideoFullScreen(
+                navController = navController,
+                onCloseFullScreen = onCloseVideoFullScreen
+                )
+        }
+
 
 
     }

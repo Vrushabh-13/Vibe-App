@@ -1,5 +1,7 @@
 package com.vrushabhgaikar.vibeplayer.presentation.components
 
+import androidx.compose.ui.graphics.Color
+import android.graphics.ColorFilter
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -14,6 +16,7 @@ import coil.compose.AsyncImage
 import com.vrushabhgaikar.vibeplayer.R
 import com.vrushabhgaikar.vibeplayer.domain.model.PlaceholderType
 import com.vrushabhgaikar.vibeplayer.utils.AppUtils
+
 
 @Composable
 fun AppImage(
@@ -47,7 +50,8 @@ fun AppImage(
     painter: Painter,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
-    contentScale: ContentScale = ContentScale.Crop
+    contentScale: ContentScale = ContentScale.Crop,
+    tint: Color? = null
 
 ) {
 
@@ -56,6 +60,9 @@ fun AppImage(
         contentDescription = contentDescription,
         modifier = modifier,
         contentScale = contentScale,
+        colorFilter = tint?.let {
+            androidx.compose.ui.graphics.ColorFilter.tint(it)
+        }
 
     )
 }

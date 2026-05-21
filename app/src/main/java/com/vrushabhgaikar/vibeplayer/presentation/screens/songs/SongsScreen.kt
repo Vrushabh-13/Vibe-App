@@ -1,25 +1,25 @@
 package com.vrushabhgaikar.vibeplayer.presentation.screens.songs
 
-import AppTopBar
+import android.net.Uri
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppTopBar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.vrushabhgaikar.vibeplayer.R
-import com.vrushabhgaikar.vibeplayer.data.local.MediaStoreReader
-import com.vrushabhgaikar.vibeplayer.data.model.Song
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
+import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
+import com.vrushabhgaikar.vibeplayer.domain.model.SourceType
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppFilterChips
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppSearchBar
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppSectionTitle
@@ -32,7 +32,8 @@ import com.vrushabhgaikar.vibeplayer.presentation.screens.songs.components.SongL
 fun SongsScreen(viewModel: HomeViewModel,
                 onSongClick: (MediaItemModel) -> Unit,
                 onMediaUpdated: (MediaItemModel) -> Unit) {
-    val trendingSongs = viewModel.recommendedSongs.collectAsState()
+    val allMedia = viewModel.allMediaList.collectAsState()
+    val trendingSongs = viewModel.recommendedSongs.collectAsState(initial = emptyList())
     val songs = viewModel.filteredSongs.collectAsState()
     val selectedFilter = viewModel.songFilter.collectAsState()
     val searchQuery = viewModel.searchQuery.collectAsState()
@@ -49,14 +50,12 @@ fun SongsScreen(viewModel: HomeViewModel,
 //            Song(R.drawable.img_music_thumb, "Humnava Mere", "Jubin Nautiyal")
 //        )
 //    }
-
+    AppTopBar("Songs")
     LazyColumn(modifier = Modifier
-        .fillMaxSize()
+        .padding(top = 60.dp)
         .background(MaterialTheme.colorScheme.background),
         contentPadding = PaddingValues(bottom = 80.dp)
     ) {
-        item{AppTopBar("Songs")}
-
         item{ VerticalSpacer(12.dp) }
 
         item { AppSearchBar(
@@ -69,16 +68,30 @@ fun SongsScreen(viewModel: HomeViewModel,
         item { VerticalSpacer(16.dp) }
 
         if(searchQuery.value.isBlank()){
-            item { AppSectionTitle(stringResource(R.string.trending_now)) }
+            item { AppSectionTitle(stringResource(R.string.trending_now),) }
             item {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(horizontal = 16.dp)
                 ) {
-                    items(trendingSongs.value) { media ->
+                    items(trendingSongs.value) { song ->
+
+                        val mediaFromState =
+                            allMedia.value.find { it.id == song.id }
+                        val media = mediaFromState ?: MediaItemModel(
+                            id = song.id,
+                            title = song.title,
+                            artist = song.artist,
+                            uri = Uri.parse(song.songUrl),
+                            thumbnailUri = Uri.parse(song.thumbnailUrl),
+                            mediaType = MediaType.AUDIO,
+                            sourceType = SourceType.ONLINE,
+                            isFav = false
+                        )
                         AppSongCard(
                             media = media,
                             onClick = {
+                                viewModel.updatePlayedMedia(media)
                                 onSongClick(media)
                             },
                             onIsFavClick = {
@@ -107,7 +120,9 @@ fun SongsScreen(viewModel: HomeViewModel,
 
         items(items = songs.value, key = { it.id!! }) { media ->
             SongListItem(media = media,
-                onClick = { onSongClick(media) },
+                onClick = {
+                    viewModel.updatePlayedMedia(media)
+                    onSongClick(media) },
                 onFavClick = {
                     val updated =
                         viewModel.toggleFavorite(media)

@@ -37,6 +37,7 @@ import com.vrushabhgaikar.vibeplayer.presentation.components.AppText
 import com.vrushabhgaikar.vibeplayer.presentation.components.VerticalSpacer
 import com.vrushabhgaikar.vibeplayer.ui.theme.LightGray
 import com.vrushabhgaikar.vibeplayer.ui.theme.White
+import com.vrushabhgaikar.vibeplayer.utils.TimeUtils
 
 @Composable
 fun VideoCard(media: MediaItemModel,
@@ -88,7 +89,7 @@ fun VideoCard(media: MediaItemModel,
                     .padding(7.dp)
             )
             AppText(
-                text = "03:45",
+                text = TimeUtils.formatDuration(media.duration) ,
                 color = White,
                 fontSize = 11.sp,
                 modifier = Modifier

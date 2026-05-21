@@ -1,3 +1,5 @@
+package com.vrushabhgaikar.vibeplayer.presentation.components
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -13,9 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vrushabhgaikar.vibeplayer.R
-import com.vrushabhgaikar.vibeplayer.presentation.components.AppIcon
-import com.vrushabhgaikar.vibeplayer.presentation.components.AppText
-import com.vrushabhgaikar.vibeplayer.presentation.components.HorizontalSpacer
 import com.vrushabhgaikar.vibeplayer.ui.theme.White
 
 @Composable
@@ -33,23 +32,30 @@ fun AppTopBar(topBarTitle: String,
     ) {
         if (showBackButton) {
 
-            AppIcon(
-                painter = painterResource(R.drawable.ic_left_arrow),
-                contentDescription = null,
-                tint = White,
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable {
-                        onBackClick()
-                    }
-            )
-            HorizontalSpacer(12.dp)
-            AppText(
-                text = topBarTitle,
-                color = White,
-                fontSize = 22.sp
-            )
-            HorizontalSpacer(100.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                AppIcon(
+                    painter = painterResource(R.drawable.ic_left_arrow),
+                    contentDescription = null,
+                    tint = White,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable {
+                            onBackClick()
+                        }
+
+                )
+                HorizontalSpacer(12.dp)
+                AppText(
+                    text = topBarTitle,
+                    color = White,
+                    fontSize = 22.sp
+                )
+            }
+
+
         } else {
 
             AppText(
@@ -63,9 +69,9 @@ fun AppTopBar(topBarTitle: String,
                 AppIcon(
                     painter = painterResource(id = R.drawable.ic_notification)
                 )
-                AppIcon(
-                    painter = painterResource(id = R.drawable.ic_profile)
-                )
+//                AppIcon(
+//                    painter = painterResource(id = R.drawable.ic_profile)
+//                )
             }
         }
     }
