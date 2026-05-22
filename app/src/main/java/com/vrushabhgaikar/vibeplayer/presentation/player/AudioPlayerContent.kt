@@ -49,9 +49,9 @@ fun AudioPlayerContent(
     onRepeat: () -> Unit
 
 ) {
-    val progress = if (uiState.duration > 0){
-        uiState.currentPosition.toFloat()/uiState.duration
-    }else 0f
+    val progress = if (uiState.duration > 0) {
+        uiState.currentPosition.toFloat() / uiState.duration
+    } else 0f
 
     Column(
         modifier = Modifier
@@ -70,7 +70,7 @@ fun AudioPlayerContent(
                     color = LightGray,
                     shape = RoundedCornerShape(10)
                 )
-        ){
+        ) {
             AppImage(
                 model = uiState.currentMedia?.thumbnailUri,
                 contentDescription = null,
@@ -80,8 +80,8 @@ fun AudioPlayerContent(
                     .clip(RoundedCornerShape(30.dp)),
                 placeholderType = PlaceholderType.AUDIO,
 
-            )
-            AppGradientOverlay( modifier = Modifier.matchParentSize())
+                )
+            AppGradientOverlay(modifier = Modifier.matchParentSize())
         }
 
 
@@ -108,7 +108,7 @@ fun AudioPlayerContent(
                 VerticalSpacer(4.dp)
 
                 AppText(
-                    text = uiState.currentMedia?.artist?: "",
+                    text = uiState.currentMedia?.artist ?: "",
                     color = LightGray,
                     fontSize = 18.sp
                 )
@@ -160,13 +160,14 @@ fun AudioPlayerContent(
             AppIcon(
                 painter = painterResource(id = R.drawable.ic_repeat),
                 contentDescription = null,
-                tint =  if (uiState.isRepeatEnabled)
+                tint = if (uiState.isRepeatEnabled)
                     PurplePrimary
                 else
                     LightGray,
-                modifier = Modifier.size(34.dp)
+                modifier = Modifier
+                    .size(34.dp)
                     .clip(shape = CircleShape)
-                    .clickable{
+                    .clickable {
                         onRepeat()
                     }
             )
@@ -175,9 +176,10 @@ fun AudioPlayerContent(
                 painter = painterResource(id = R.drawable.ic_10_back),
                 contentDescription = null,
                 tint = White,
-                modifier = Modifier.size(42.dp)
+                modifier = Modifier
+                    .size(42.dp)
                     .clip(shape = CircleShape)
-                    .clickable{ onBack10() }
+                    .clickable { onBack10() }
             )
 
             Box(
@@ -193,8 +195,8 @@ fun AudioPlayerContent(
                         ),
                         shape = CircleShape
                     )
-                    .clickable{
-                            onPlayPause()
+                    .clickable {
+                        onPlayPause()
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -216,31 +218,35 @@ fun AudioPlayerContent(
                 painter = painterResource(id = R.drawable.ic_10_forward),
                 contentDescription = null,
                 tint = White,
-                modifier = Modifier.size(42.dp)
+                modifier = Modifier
+                    .size(42.dp)
                     .clip(shape = CircleShape)
-                    .clickable{
+                    .clickable {
                         onForward10()
                     }
             )
 
             AppIcon(
-                painter = painterResource(if(uiState.currentMedia?.isFav == true)
-                    R.drawable.ic_heart_fill
-                else
-                    R.drawable.ic_like),
-                contentDescription = null,
-                tint = if(uiState.currentMedia?.isFav == true)
-                    PurplePrimary
+                painter = painterResource(
+                    if (uiState.currentMedia?.isFav == true)
+                        R.drawable.ic_heart_fill
                     else
-                        LightGray,
-                modifier = Modifier.size(38.dp)
+                        R.drawable.ic_like
+                ),
+                contentDescription = null,
+                tint = if (uiState.currentMedia?.isFav == true)
+                    PurplePrimary
+                else
+                    LightGray,
+                modifier = Modifier
+                    .size(38.dp)
                     .clip(shape = CircleShape)
-                    .clickable{
+                    .clickable {
                         isFav()
                     }
             )
         }
 
-       VerticalSpacer(30.dp)
+        VerticalSpacer(30.dp)
     }
 }

@@ -1,6 +1,5 @@
 package com.vrushabhgaikar.vibeplayer.presentation.components
 
-import android.R.attr.onClick
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -11,10 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -28,8 +23,10 @@ import com.vrushabhgaikar.vibeplayer.ui.theme.PurpleGradient
 import com.vrushabhgaikar.vibeplayer.ui.theme.White
 
 @Composable
-fun AppFilterChips(selectedFilter: String ,
-                   onSelect: (String) -> Unit){
+fun AppFilterChips(
+    selectedFilter: String,
+    onSelect: (String) -> Unit
+) {
 
     Row(
         modifier = Modifier
@@ -37,9 +34,9 @@ fun AppFilterChips(selectedFilter: String ,
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        ChipItem(text =SourceType.ALL.value,selected = selectedFilter ,onClick  = onSelect)
-        ChipItem(text = SourceType.ONLINE.value,selected = selectedFilter , onClick  = onSelect)
-        ChipItem(text = SourceType.OFFLINE.value,selected = selectedFilter , onClick  = onSelect)
+        ChipItem(text = SourceType.ALL.value, selected = selectedFilter, onClick = onSelect)
+        ChipItem(text = SourceType.ONLINE.value, selected = selectedFilter, onClick = onSelect)
+        ChipItem(text = SourceType.OFFLINE.value, selected = selectedFilter, onClick = onSelect)
 
     }
 }
@@ -49,7 +46,7 @@ fun ChipItem(
     text: String,
     selected: String,
     onClick: (String) -> Unit
-){
+) {
     val isSelected = text == selected
 
     Box(
@@ -64,12 +61,12 @@ fun ChipItem(
             )
             .border(
                 width = 1.dp,
-                color = if (!isSelected)LightGray else Color.Transparent,
+                color = if (!isSelected) LightGray else Color.Transparent,
                 shape = RoundedCornerShape(50)
             )
-            .clickable{onClick(text)}
+            .clickable { onClick(text) }
             .padding(horizontal = 16.dp, vertical = 8.dp)
-    ){
+    ) {
         AppText(
             text = text,
             color = White,

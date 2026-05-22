@@ -24,7 +24,7 @@ fun HistoryScreen(
     onSongClick: (MediaItemModel) -> Unit,
     onBack: () -> Unit,
     onMediaUpdated: (MediaItemModel) -> Unit
-){
+) {
     val historyList = viewModel.historyList.collectAsState()
 
 
@@ -32,7 +32,7 @@ fun HistoryScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(BlackBg)
-    ){
+    ) {
         AppTopBar(
             topBarTitle = "History",
             showBackButton = true,
@@ -40,18 +40,21 @@ fun HistoryScreen(
             modifier = Modifier.background(PurpleGradient)
         )
 
-        LazyColumn( modifier = Modifier,
+        LazyColumn(
+            modifier = Modifier,
             contentPadding = PaddingValues(
                 horizontal = 16.dp,
                 vertical = 12.dp
             )
         )
         {
-            items(historyList.value){media ->
+            items(historyList.value) { media ->
                 SongListItem(
                     media = media,
-                    onClick = { viewModel.updatePlayedMedia(media)
-                        onSongClick(media)},
+                    onClick = {
+                        viewModel.updatePlayedMedia(media)
+                        onSongClick(media)
+                    },
                     onFavClick = {
                         val updatedMedia = viewModel.toggleFavorite(media)
                         onMediaUpdated(updatedMedia)
@@ -64,7 +67,6 @@ fun HistoryScreen(
 
         }
     }
-
 
 
 }

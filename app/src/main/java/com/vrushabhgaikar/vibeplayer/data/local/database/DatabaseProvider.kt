@@ -11,10 +11,10 @@ object DatabaseProvider {
     fun getDatabase(context: Context): VibeDatabase {
         return INSTANCE ?: synchronized(this) {
             val instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        VibeDatabase::class.java,
-                        "vibe_database"
-                    ).fallbackToDestructiveMigration(false)
+                context.applicationContext,
+                VibeDatabase::class.java,
+                "vibe_database"
+            ).fallbackToDestructiveMigration(false)
                 .build()
 
             INSTANCE = instance

@@ -1,13 +1,16 @@
 package com.vrushabhgaikar.vibeplayer.presentation.screens.home
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.vrushabhgaikar.vibeplayer.data.local.MediaStoreReader
 import com.vrushabhgaikar.vibeplayer.data.local.database.DatabaseProvider
 import com.vrushabhgaikar.vibeplayer.data.local.entity.RecommendedSongEntity
+import com.vrushabhgaikar.vibeplayer.data.repository.FavoriteRepository
+import com.vrushabhgaikar.vibeplayer.data.repository.HistoryRepository
 import com.vrushabhgaikar.vibeplayer.data.repository.MediaRepositoryImpl
+import com.vrushabhgaikar.vibeplayer.data.repository.PlaylistRepository
+import com.vrushabhgaikar.vibeplayer.data.repository.RecommendationRepository
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
 import com.vrushabhgaikar.vibeplayer.domain.model.PlaylistModel
@@ -15,18 +18,10 @@ import com.vrushabhgaikar.vibeplayer.domain.model.SourceType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.xml.transform.Source
-import com.vrushabhgaikar.vibeplayer.data.manager.RecommendationManager
-import com.vrushabhgaikar.vibeplayer.data.repository.RecommendationRepository
-import com.vrushabhgaikar.vibeplayer.data.local.entity.FavoriteSongEntity
-import com.vrushabhgaikar.vibeplayer.data.repository.FavoriteRepository
-import com.vrushabhgaikar.vibeplayer.data.repository.HistoryRepository
-import com.vrushabhgaikar.vibeplayer.data.repository.PlaylistRepository
-import kotlinx.coroutines.flow.first
 
 class HomeViewModel(
     application: Application
-): AndroidViewModel(application){
+) : AndroidViewModel(application) {
     private val repository = MediaRepositoryImpl(
         MediaStoreReader(application)
     )
@@ -45,8 +40,7 @@ class HomeViewModel(
     private val _recentlyPlayedList =
         MutableStateFlow<List<MediaItemModel>>(emptyList())
 
-    val recentlyPlayedList: StateFlow<List<MediaItemModel>>
-            = _recentlyPlayedList
+    val recentlyPlayedList: StateFlow<List<MediaItemModel>> = _recentlyPlayedList
 
     private val _historyList =
         MutableStateFlow<List<MediaItemModel>>(emptyList())
@@ -72,34 +66,23 @@ class HomeViewModel(
     private val _playlists =
         MutableStateFlow<List<PlaylistModel>>(emptyList())
 
-    val playlists: StateFlow<List<PlaylistModel>>
-            = _playlists
+    val playlists: StateFlow<List<PlaylistModel>> = _playlists
 
-//    private val _recommendedSongs =
-//        MutableStateFlow<List<MediaItemModel>>(emptyList())
-//
-//    val recommendedSongs: StateFlow<List<MediaItemModel>>
-//            = _recommendedSongs
-
-//    val recommendedSongs = RecommendationManager.recommendedSongs
 
     private val _continueListeningList =
         MutableStateFlow<List<MediaItemModel>>(emptyList())
 
-    val continueListeningList: StateFlow<List<MediaItemModel>>
-            = _continueListeningList
+    val continueListeningList: StateFlow<List<MediaItemModel>> = _continueListeningList
 
     private val _favoriteSongs =
         MutableStateFlow<List<MediaItemModel>>(emptyList())
 
-    val favoriteSongs: StateFlow<List<MediaItemModel>>
-            = _favoriteSongs
+    val favoriteSongs: StateFlow<List<MediaItemModel>> = _favoriteSongs
 
     private val _filteredSongs =
         MutableStateFlow<List<MediaItemModel>>(emptyList())
 
-    val filteredSongs: StateFlow<List<MediaItemModel>>
-            = _filteredSongs
+    val filteredSongs: StateFlow<List<MediaItemModel>> = _filteredSongs
 
     private val _songFilter = MutableStateFlow(SourceType.ALL.value)
     val songFilter: StateFlow<String> = _songFilter
@@ -110,8 +93,7 @@ class HomeViewModel(
     private val _trendingVideos =
         MutableStateFlow<List<MediaItemModel>>(emptyList())
 
-    val trendingVideos: StateFlow<List<MediaItemModel>>
-            = _trendingVideos
+    val trendingVideos: StateFlow<List<MediaItemModel>> = _trendingVideos
 
     private val _videoFilter =
         MutableStateFlow(SourceType.ALL.value)
@@ -121,43 +103,13 @@ class HomeViewModel(
     private val _filteredVideos =
         MutableStateFlow<List<MediaItemModel>>(emptyList())
 
-    val filteredVideos: StateFlow<List<MediaItemModel>>
-            = _filteredVideos
+    val filteredVideos: StateFlow<List<MediaItemModel>> = _filteredVideos
 
     private val _videoSearchQuery =
         MutableStateFlow("")
 
-    val videoSearchQuery: StateFlow<String>
-            = _videoSearchQuery
+    val videoSearchQuery: StateFlow<String> = _videoSearchQuery
 
-//    private val _playlists =
-//        MutableStateFlow<List<PlaylistModel>>(emptyList())
-//
-//    val playlists: StateFlow<List<PlaylistModel>>
-//            = _playlists
-
-
-
-//    fun createPlaylist(name: String) {
-//
-//        if (name.isBlank()) return
-//
-//        val current = _playlists.value.toMutableList()
-//
-//        val alreadyExists =
-//            current.any {
-//                it.name == name
-//            }
-//
-//        if (!alreadyExists) {
-//
-//            current.add(
-//                PlaylistModel(name = name)
-//            )
-//
-//            _playlists.value = current
-//        }
-//    }
 
     fun createPlaylist(name: String) {
 
@@ -169,25 +121,6 @@ class HomeViewModel(
         }
     }
 
-//    fun saveSongsToPlaylist(
-//        playlistName: String,
-//        mediaIds: List<Long>
-//    ) {
-//        if (playlistName.isBlank())return
-//        _playlists.value =
-//            _playlists.value.map { playlist ->
-//
-//                if (playlist.name == playlistName) {
-//
-//                    playlist.copy(
-//                        mediaIds = mediaIds.distinct()
-//                    )
-//
-//                } else {
-//                    playlist
-//                }
-//            }
-//    }
 
     fun saveSongsToPlaylist(
         playlistName: String,
@@ -205,20 +138,6 @@ class HomeViewModel(
         }
     }
 
-    fun getPlaylistSongs(
-        playlistName: String
-    ): List<MediaItemModel> {
-
-        val playlist =
-            _playlists.value.find {
-                it.name == playlistName
-            }
-
-        return _allMediaList.value.filter { media ->
-
-            playlist?.mediaIds?.contains(media.id) == true
-        }
-    }
 
     fun setVideoFilter(filter: String) {
 
@@ -236,7 +155,7 @@ class HomeViewModel(
 
     private fun applyVideoFilters() {
 
-        val filteredByType = when(_videoFilter.value) {
+        val filteredByType = when (_videoFilter.value) {
 
             SourceType.ONLINE.value ->
                 _allMediaList.value.filter {
@@ -257,7 +176,7 @@ class HomeViewModel(
         }
 
         _filteredVideos.value =
-            if(_videoSearchQuery.value.isBlank()) {
+            if (_videoSearchQuery.value.isBlank()) {
 
                 filteredByType
 
@@ -294,14 +213,13 @@ class HomeViewModel(
     }
 
 
-
-    fun updateSearchQuery(query: String){
+    fun updateSearchQuery(query: String) {
         _searchQuery.value = query
         applySongFilters()
     }
 
-    private fun applySongFilters(){
-        val filteredByType = when(_songFilter.value){
+    private fun applySongFilters() {
+        val filteredByType = when (_songFilter.value) {
             SourceType.ONLINE.value ->
                 _allMediaList.value.filter {
                     it.mediaType == MediaType.AUDIO &&
@@ -313,15 +231,16 @@ class HomeViewModel(
                     it.mediaType == MediaType.AUDIO &&
                             it.sourceType == SourceType.OFFLINE
                 }
+
             else ->
                 _allMediaList.value.filter {
                     it.mediaType == MediaType.AUDIO
                 }
         }
         _filteredSongs.value =
-            if (_searchQuery.value.isBlank()){
+            if (_searchQuery.value.isBlank()) {
                 filteredByType
-            }else{
+            } else {
                 filteredByType.filter {
                     it.title?.contains(
                         _searchQuery.value,
@@ -340,46 +259,14 @@ class HomeViewModel(
         return _allMediaList.value.find { it.id == id }
     }
 
-    fun setSongFilter(filter: String){
+    fun setSongFilter(filter: String) {
 
         _songFilter.value = filter
         applySongFilters()
 
-//        _filteredSongs.value =
-//            when(filter){
-//
-//                SourceType.ONLINE.value ->
-//                    _allMediaList.value.filter {
-//                        it.mediaType == MediaType.AUDIO &&
-//                                it.sourceType == SourceType.ONLINE
-//                    }
-//
-//                SourceType.OFFLINE.value ->
-//                    _allMediaList.value.filter {
-//                        it.mediaType == MediaType.AUDIO &&
-//                                it.sourceType == SourceType.OFFLINE
-//                    }
-//
-//                else ->
-//                    _allMediaList.value.filter {
-//                        it.mediaType == MediaType.AUDIO
-//                    }
-//            }
+
     }
 
-//    fun getFilteredSongs(): List<MediaItemModel>{
-//        return when(_songFilter.value){
-//            SourceType.ONLINE.value -> _allMediaList.value.filter {
-//                it.mediaType == MediaType.AUDIO && it.sourceType == SourceType.ONLINE
-//            }
-//            SourceType.OFFLINE.value -> _allMediaList.value.filter {
-//                it.mediaType == MediaType.AUDIO && it.sourceType == SourceType.OFFLINE
-//            }
-//            else -> _allMediaList.value.filter {
-//                it.mediaType == MediaType.AUDIO
-//            }
-//        }
-//    }
 
     fun syncRecommendedSong(
         media: MediaItemModel
@@ -413,6 +300,7 @@ class HomeViewModel(
                 }
         }
     }
+
     private fun syncFavoritesFromRoom() {
 
         viewModelScope.launch {
@@ -471,6 +359,7 @@ class HomeViewModel(
                 }
         }
     }
+
     private fun loadPlaylistsFromRoom() {
 
         viewModelScope.launch {
@@ -501,7 +390,7 @@ class HomeViewModel(
 
 
     fun loadMedia() {
-        if(isLoaded) return
+        if (isLoaded) return
 
         isLoaded = true
         viewModelScope.launch {
@@ -512,7 +401,7 @@ class HomeViewModel(
             _videoListLocal.value =
                 repository.getLocalVideos()
 
-             _allMediaList.value =
+            _allMediaList.value =
                 repository.getAllMedia()
 
             syncFavoritesFromRoom()
@@ -521,33 +410,15 @@ class HomeViewModel(
 
             loadPlaylistsFromRoom()
 
-//            setSongFilter(SourceType.ALL.value)
-              applySongFilters()
+
+            applySongFilters()
 
 
             updateHomeSections()
             applyVideoFilters()
 
 //            repo.clearAll()
-//
-//            _allMediaList.value
-//                .filter {
-//                    it.mediaType == MediaType.AUDIO
-//                }
-//                .take(5).forEach { media ->
-//                viewModelScope.launch {
-//                    repo.addRecommendation(
-//                        RecommendedSongEntity(
-//                            id = media.id ?: 0L,
-//                            title = media.title ?: "",
-//                            artist = media.artist ?: "",
-//                            songUrl = media.uri.toString(),
-//                            thumbnailUrl = media.thumbnailUri.toString(),
-//                            isNewRecommendation = false
-//                        )
-//                    )
-//                }
-//            }
+
             _allMediaList.value
                 .filter {
                     it.mediaType == MediaType.AUDIO
@@ -571,27 +442,17 @@ class HomeViewModel(
                 }
 
 
-
-//            _allMediaList.value.firstOrNull()?.let {media ->
-//                RecommendationManager.addRecommendation(
-//                    media.copy(
-//                        isNewRecommendation = true
-//                    )
-//                )
-//            }
-
-
         }
     }
 
-    fun updatePlayedMedia(media: MediaItemModel){
+    fun updatePlayedMedia(media: MediaItemModel) {
         _allMediaList.value = _allMediaList.value.map {
-            if(it.id == media.id){
+            if (it.id == media.id) {
                 it.copy(
                     playedAt = System.currentTimeMillis(),
                     playedDuration = 1000L
                 )
-            }else{
+            } else {
                 it
             }
         }
@@ -605,6 +466,7 @@ class HomeViewModel(
             }
         }
     }
+
     private fun updateHomeSections() {
 
         _recentlyPlayedList.value =
@@ -613,11 +475,7 @@ class HomeViewModel(
                 .sortedByDescending { it.playedAt }
                 .take(5)
 
-//        _recommendedSongs.value =
-//            _allMediaList.value
-//                .filter { it.mediaType == MediaType.AUDIO }
-//                .sortedBy { it.id }
-//                .take(6)
+
 
         _trendingVideos.value =
             _allMediaList.value
@@ -641,6 +499,7 @@ class HomeViewModel(
                 .filter { it.playedAt > 0L }
                 .sortedByDescending { it.playedAt }
     }
+
     fun toggleFavorite(media: MediaItemModel): MediaItemModel {
 
         var updatedMedia = media
@@ -660,17 +519,12 @@ class HomeViewModel(
                     it
                 }
             }
-//        setSongFilter(_songFilter.value)
+
         applySongFilters()
         applyVideoFilters()
         updateHomeSections()
 
-//        viewModelScope.launch {
-//            repo.updateFavorite(
-//                id = updatedMedia.id ?: return@launch,
-//                isFav = updatedMedia.isFav
-//            )
-//        }
+
 
         viewModelScope.launch {
 
@@ -693,7 +547,6 @@ class HomeViewModel(
                 isFav = updatedMedia.isFav
             )
         }
-//        RecommendationManager.updateRecommendation(updatedMedia)
 
         return updatedMedia
     }

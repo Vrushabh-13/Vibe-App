@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,7 +21,6 @@ import com.vrushabhgaikar.vibeplayer.presentation.components.AppTopBar
 import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeViewModel
 import com.vrushabhgaikar.vibeplayer.presentation.screens.library.components.SongSelectionItem
 import com.vrushabhgaikar.vibeplayer.ui.theme.BlackBg
-import  androidx.compose.foundation.lazy.items
 
 @Composable
 fun PlaylistSelectionScreen(
@@ -46,14 +46,14 @@ fun PlaylistSelectionScreen(
             .background(BlackBg)
     ) {
 
-        // TOP BAR
+
         AppTopBar(
             topBarTitle = "Edit: $playlistName",
             showBackButton = true,
             onBackClick = onBack
         )
 
-        // SONG LIST
+
         LazyColumn(
             modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(16.dp),
@@ -81,7 +81,7 @@ fun PlaylistSelectionScreen(
             }
         }
 
-        // SAVE BUTTON
+
         Button(
             modifier = Modifier
                 .fillMaxWidth()

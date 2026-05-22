@@ -1,6 +1,6 @@
 package com.vrushabhgaikar.vibeplayer.data.dummy
 
-import android.net.Uri
+import androidx.core.net.toUri
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
 import com.vrushabhgaikar.vibeplayer.domain.model.SourceType
@@ -11,8 +11,8 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         id = 1,
         title = "Blinding Lights",
         artist = "The Weeknd",
-        uri = Uri.parse("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"),
-        thumbnailUri = Uri.parse("https://picsum.photos/300/300?random=1"),
+        uri = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3".toUri(),
+        thumbnailUri = "https://picsum.photos/300/300?random=1".toUri(),
         duration = 240000,
         playedDuration = 60000,
         isPlaying = true,
@@ -24,8 +24,8 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         id = 2,
         title = "Shape of You",
         artist = "Ed Sheeran",
-        uri = Uri.parse("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"),
-        thumbnailUri = Uri.parse("https://picsum.photos/300/300?random=2"),
+        uri = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3".toUri(),
+        thumbnailUri = "https://picsum.photos/300/300?random=2".toUri(),
         duration = 210000,
         mediaType = MediaType.AUDIO,
         sourceType = SourceType.ONLINE
@@ -35,8 +35,8 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         id = 3,
         title = "Kesariya",
         artist = "Arijit Singh",
-        uri = Uri.parse("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"),
-        thumbnailUri = Uri.parse("https://picsum.photos/300/300?random=3"),
+        uri = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3".toUri(),
+        thumbnailUri = "https://picsum.photos/300/300?random=3".toUri(),
         duration = 250000,
         isFav = true,
         mediaType = MediaType.AUDIO,
@@ -47,8 +47,8 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         id = 4,
         title = "Believer",
         artist = "Imagine Dragons",
-        uri = Uri.parse("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"),
-        thumbnailUri = Uri.parse("https://picsum.photos/300/300?random=4"),
+        uri = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3".toUri(),
+        thumbnailUri = "https://picsum.photos/300/300?random=4".toUri(),
         duration = 204000,
         mediaType = MediaType.AUDIO,
         sourceType = SourceType.ONLINE
@@ -58,8 +58,8 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         id = 5,
         title = "Levitating",
         artist = "Dua Lipa",
-        uri = Uri.parse("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"),
-        thumbnailUri = Uri.parse("https://picsum.photos/300/300?random=5"),
+        uri = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3".toUri(),
+        thumbnailUri = "https://picsum.photos/300/300?random=5".toUri(),
         duration = 233000,
         mediaType = MediaType.AUDIO,
         sourceType = SourceType.ONLINE
@@ -69,8 +69,8 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         id = 6,
         title = "Nature Video",
         artist = "Video Media",
-        uri = Uri.parse("https://samplelib.com/lib/preview/mp4/sample-5s.mp4"),
-        thumbnailUri = Uri.parse("https://picsum.photos/300/300?random=6"),
+        uri = "https://samplelib.com/lib/preview/mp4/sample-5s.mp4".toUri(),
+        thumbnailUri = "https://picsum.photos/300/300?random=6".toUri(),
         duration = 5000,
         mediaType = MediaType.VIDEO,
         sourceType = SourceType.ONLINE
@@ -80,8 +80,8 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         id = 7,
         title = "Travel Vlog",
         artist = "Video Media",
-        uri = Uri.parse("https://samplelib.com/lib/preview/mp4/sample-10s.mp4"),
-        thumbnailUri = Uri.parse("https://picsum.photos/300/300?random=7"),
+        uri = "https://samplelib.com/lib/preview/mp4/sample-10s.mp4".toUri(),
+        thumbnailUri = "https://picsum.photos/300/300?random=7".toUri(),
         duration = 10000,
         mediaType = MediaType.VIDEO,
         sourceType = SourceType.ONLINE
@@ -91,8 +91,8 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         id = 8,
         title = "Workout Mix",
         artist = "Alan Walker",
-        uri = Uri.parse("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"),
-        thumbnailUri = Uri.parse("https://picsum.photos/300/300?random=8"),
+        uri = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3".toUri(),
+        thumbnailUri = "https://picsum.photos/300/300?random=8".toUri(),
         duration = 280000,
         isFav = true,
         mediaType = MediaType.AUDIO,
@@ -103,8 +103,8 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         id = 9,
         title = "Coding Beats",
         artist = "LoFi Studio",
-        uri = Uri.parse("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3"),
-        thumbnailUri = Uri.parse("https://picsum.photos/300/300?random=9"),
+        uri = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3".toUri(),
+        thumbnailUri = "https://picsum.photos/300/300?random=9".toUri(),
         duration = 320000,
         mediaType = MediaType.AUDIO,
         sourceType = SourceType.ONLINE,
@@ -115,8 +115,8 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         id = 10,
         title = "Movie Trailer",
         artist = "Video Media",
-        uri = Uri.parse("https://samplelib.com/lib/preview/mp4/sample-15s.mp4"),
-        thumbnailUri = Uri.parse("https://picsum.photos/300/300?random=10"),
+        uri = "https://samplelib.com/lib/preview/mp4/sample-15s.mp4".toUri(),
+        thumbnailUri = "https://picsum.photos/300/300?random=10".toUri(),
         duration = 15000,
         mediaType = MediaType.VIDEO,
         sourceType = SourceType.ONLINE,

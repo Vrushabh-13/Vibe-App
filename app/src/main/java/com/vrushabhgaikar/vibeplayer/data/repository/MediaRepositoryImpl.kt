@@ -6,7 +6,7 @@ import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
 
 class MediaRepositoryImpl(
     private val mediaStoreReader: MediaStoreReader
-): MediaRepository {
+) : MediaRepository {
     override fun getLocalAudio(): List<MediaItemModel> {
 
         return mediaStoreReader.getLocalAudio()

@@ -9,7 +9,7 @@ data class MediaItemModel(
     val uri: Uri? = null,
     val duration: Long = 0,
     val thumbnailUri: Uri? = null,
-    val isFav: Boolean = false ,
+    val isFav: Boolean = false,
     val playedDuration: Long = 0,
     val isPlaying: Boolean = false,
     val mediaType: MediaType = MediaType.AUDIO,

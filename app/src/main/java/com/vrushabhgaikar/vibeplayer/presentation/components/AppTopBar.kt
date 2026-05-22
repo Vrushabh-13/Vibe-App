@@ -18,10 +18,12 @@ import com.vrushabhgaikar.vibeplayer.R
 import com.vrushabhgaikar.vibeplayer.ui.theme.White
 
 @Composable
-fun AppTopBar(topBarTitle: String,
-              modifier: Modifier = Modifier,
-              showBackButton: Boolean = false,
-              onBackClick: () -> Unit = {}) {
+fun AppTopBar(
+    topBarTitle: String,
+    modifier: Modifier = Modifier,
+    showBackButton: Boolean = false,
+    onBackClick: () -> Unit = {}
+) {
 
     Row(
         modifier = modifier
@@ -69,9 +71,7 @@ fun AppTopBar(topBarTitle: String,
                 AppIcon(
                     painter = painterResource(id = R.drawable.ic_notification)
                 )
-//                AppIcon(
-//                    painter = painterResource(id = R.drawable.ic_profile)
-//                )
+
             }
         }
     }

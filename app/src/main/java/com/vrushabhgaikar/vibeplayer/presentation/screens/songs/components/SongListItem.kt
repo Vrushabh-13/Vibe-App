@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +38,7 @@ fun SongListItem(
     media: MediaItemModel,
     onClick: () -> Unit,
     onFavClick: () -> Unit
-){
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -50,82 +49,74 @@ fun SongListItem(
             )
             .clickable { onClick() }
             .padding(14.dp)
-    ){
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
-        ) { Box(
-            modifier = Modifier
-                .border(
-                    width = 0.1.dp,
-                    color = LightGray,
-                    shape = RoundedCornerShape(16)
-                )
-        ){
-            AppImage(
-                model = media.thumbnailUri,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+        ) {
+            Box(
                 modifier = Modifier
-                    .size(60.dp)
-                    .clip(RoundedCornerShape(12.dp)),
+                    .border(
+                        width = 0.1.dp,
+                        color = LightGray,
+                        shape = RoundedCornerShape(16)
+                    )
+            ) {
+                AppImage(
+                    model = media.thumbnailUri,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clip(RoundedCornerShape(12.dp)),
 
-                placeholderType = if (MediaType.AUDIO == media.mediaType){
-                    PlaceholderType.AUDIO
-                }else{
-                    PlaceholderType.VIDEO
-                }
+                    placeholderType = if (MediaType.AUDIO == media.mediaType) {
+                        PlaceholderType.AUDIO
+                    } else {
+                        PlaceholderType.VIDEO
+                    }
 
-            )
-            AppGradientOverlay( modifier = Modifier.matchParentSize())
-        }
+                )
+                AppGradientOverlay(modifier = Modifier.matchParentSize())
+            }
 
             HorizontalSpacer(12.dp)
 
             Column(modifier = Modifier.weight(1f)) {
 
-                AppText(media.title?:"", color = White, fontSize = 15.sp, fontWeight = FontWeight.Medium
-                ,maxLines = 1)
+                AppText(
+                    media.title ?: "",
+                    color = White,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Medium,
+                    maxLines = 1
+                )
 
-                AppText(media.artist?:"", color = LightGray, fontSize = 12.sp,maxLines = 1)
+                AppText(media.artist ?: "", color = LightGray, fontSize = 12.sp, maxLines = 1)
             }
             HorizontalSpacer(30.dp)
             AppIcon(
-                painter = painterResource(id = if(media.isFav) {
-                    com.vrushabhgaikar.vibeplayer.R.drawable.ic_heart_fill
-                }
-                else{
-                    com.vrushabhgaikar.vibeplayer.R.drawable.ic_like}),
+                painter = painterResource(
+                    id = if (media.isFav) {
+                        com.vrushabhgaikar.vibeplayer.R.drawable.ic_heart_fill
+                    } else {
+                        com.vrushabhgaikar.vibeplayer.R.drawable.ic_like
+                    }
+                ),
                 contentDescription = null,
-                tint =  if(media.isFav)
+                tint = if (media.isFav)
                     PurplePrimary
                 else
                     LightGray,
-                modifier = Modifier.size(22.dp)
+                modifier = Modifier
+                    .size(22.dp)
                     .clip(shape = CircleShape)
-                    .clickable{
+                    .clickable {
                         onFavClick()
                     }
             )
-//            HorizontalSpacer(12.dp)
 
-//            AppIcon(
-//                painter = painterResource(id = com.vrushabhgaikar.vibeplayer.R.drawable.ic_play),
-//                contentDescription = null,
-//                tint = White,
-//                modifier = Modifier
-//                    .size(42.dp)
-//                    .background(
-//                        Color.Black.copy(alpha = 0.5f),
-//                        CircleShape
-//                    )
-//                    .padding(10.dp)
-//            )
         }
-//        HorizontalDivider(
-//            modifier = Modifier.padding(start = 80.dp),
-//            thickness = 0.5.dp,
-//            color = LightGray.copy(alpha = 0.1f)
-//        )
+
     }
 
 }

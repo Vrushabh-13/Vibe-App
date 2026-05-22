@@ -86,7 +86,7 @@ class MediaStoreReader(
                             thumbnailUri = uri,
 
 
-                        )
+                            )
                     )
                 }
             }

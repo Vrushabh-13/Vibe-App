@@ -13,30 +13,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-//@Composable
-//fun AppIcon(
-//    painter: Painter,
-//    contentDescription: String? = null,
-//    modifier: Modifier = Modifier,
-//    tint: Color = MaterialTheme.colorScheme.onBackground,
-//    size: Dp = 24.dp,
-//    onClick: (() -> Unit)? = null
-//) {
-//
-//    val clickableModifier = if (onClick != null) {
-//        modifier.clickable { onClick() }
-//    } else {
-//        modifier
-//    }
-//
-//    Icon(
-//        painter = painter,
-//        contentDescription = contentDescription,
-//        tint = tint,
-//        modifier = clickableModifier.size(size)
-//    )
-//}
-
 
 @Composable
 fun AppIcon(

@@ -1,6 +1,6 @@
 package com.vrushabhgaikar.vibeplayer.navigation
 
-object Routes{
+object Routes {
     const val HOME = "home"
     const val SONGS = "songs"
     const val VIDEO = "video"

@@ -12,12 +12,12 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.vrushabhgaikar.vibeplayer.MainActivity
 
-class MusicService: MediaSessionService(){
+class MusicService : MediaSessionService() {
     private var mediaSession: MediaSession? = null
     private lateinit var player: ExoPlayer
 
     @OptIn(UnstableApi::class)
-    override fun onCreate(){
+    override fun onCreate() {
         super.onCreate()
         player = ExoPlayer.Builder(this)
             .setSeekForwardIncrementMs(10000)
@@ -45,11 +45,11 @@ class MusicService: MediaSessionService(){
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession {
-      return mediaSession!!
+        return mediaSession!!
     }
 
 
-    override fun onDestroy(){
+    override fun onDestroy() {
         mediaSession?.release()
         player.release()
         super.onDestroy()

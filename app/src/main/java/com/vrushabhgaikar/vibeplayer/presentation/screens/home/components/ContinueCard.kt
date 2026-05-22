@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,7 +24,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.vrushabhgaikar.vibeplayer.R
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
@@ -70,11 +67,12 @@ fun ContinueCard(
                     .height(110.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .clickable { onPlayClick() },
-                placeholderType = if (media.mediaType == MediaType.VIDEO){
-                    PlaceholderType.VIDEO}else PlaceholderType.AUDIO
+                placeholderType = if (media.mediaType == MediaType.VIDEO) {
+                    PlaceholderType.VIDEO
+                } else PlaceholderType.AUDIO
 
             )
-            AppGradientOverlay( modifier = Modifier.matchParentSize())
+            AppGradientOverlay(modifier = Modifier.matchParentSize())
 
             // 🔹 Audio/Video Chip
             Box(
@@ -102,20 +100,7 @@ fun ContinueCard(
                         .size(14.dp)
                 )
             }
-//            Text(
-//                text = if (media.mediaType == MediaType.VIDEO) "VIDEO" else "AUDIO",
-//                color = White,
-//                fontSize = 10.sp,
-//                modifier = Modifier
-//                    .align(Alignment.TopStart)
-//                    .padding(6.dp)
-//                    .background(
-//                        color = MaterialTheme.colorScheme.secondary,
-//                        //Color.PurplePrimary.copy(alpha = 0.6f),
-//                        RoundedCornerShape(50)
-//                    )
-//                    .padding(horizontal = 8.dp, vertical = 2.dp)
-//            )
+
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -130,33 +115,21 @@ fun ContinueCard(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = media.title?:"",
+                    text = media.title ?: "",
                     color = White,
                     fontSize = 14.sp,
                     maxLines = 1
                 )
 
                 Text(
-                    text = media.artist?:"",
+                    text = media.artist ?: "",
                     color = LightGray,
                     fontSize = 12.sp,
                     maxLines = 1
                 )
             }
 
-            // 🔹 Play Button
-//            AppIcon(
-//                painter = painterResource(id = R.drawable.ic_play),
-//                contentDescription = null,
-//                tint = White,
-//                modifier = Modifier
-//                    .size(32.dp)
-//                    .background(
-//                        Color.Black.copy(alpha = 0.6f),
-//                        CircleShape
-//                    )
-//                    .padding(6.dp)
-//            )
+
         }
 
     }

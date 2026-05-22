@@ -15,10 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -38,7 +35,7 @@ import com.vrushabhgaikar.vibeplayer.ui.theme.PurplePrimary
 fun AppSearchBar(
     value: String,
     onValueChange: (String) -> Unit
-){
+) {
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -46,16 +43,18 @@ fun AppSearchBar(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
-            .border(width = 1.dp,
+            .border(
+                width = 1.dp,
                 color = LightGray.copy(alpha = 0.5f),
-                shape = RoundedCornerShape(50))
+                shape = RoundedCornerShape(50)
+            )
             .background(
                 brush = Brush.horizontalGradient(
                     listOf(CardBg, PurplePrimary.copy(alpha = 0.2f))
                 ),
                 shape = RoundedCornerShape(50)
             )
-            .clickable{
+            .clickable {
                 focusRequester.requestFocus()
                 keyboardController?.show()
             }
@@ -63,10 +62,11 @@ fun AppSearchBar(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             AppIcon(
                 painter = painterResource(id = R.drawable.ic_search),
-                contentDescription = null, tint = LightGray)
+                contentDescription = null, tint = LightGray
+            )
 
 
 
@@ -83,31 +83,32 @@ fun AppSearchBar(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text
                 ),
-                modifier = Modifier.weight(1f).focusRequester(focusRequester)
+                modifier = Modifier
+                    .weight(1f)
+                    .focusRequester(focusRequester)
 
             )
 
-            if(value.isEmpty()){
+            if (value.isEmpty()) {
                 Text(
                     text = "What do you want to listen to?",
                     color = LightGray
                 )
             }
 
-            if(value.isNotEmpty()){
+            if (value.isNotEmpty()) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_cross),
                     contentDescription = "Clear",
                     modifier = Modifier
                         .size(20.dp)
-                        .clickable{
+                        .clickable {
                             onValueChange("")
                         }
                 )
             }
         }
     }
-
 
 
 }

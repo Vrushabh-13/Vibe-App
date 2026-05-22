@@ -8,13 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Checkbox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.Checkbox
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
 import com.vrushabhgaikar.vibeplayer.domain.model.PlaceholderType
@@ -29,7 +29,7 @@ fun SongSelectionItem(
     media: MediaItemModel,
     isSelected: Boolean,
     onCheckedChange: (Boolean) -> Unit
-){
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -37,11 +37,11 @@ fun SongSelectionItem(
             .padding(12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         Row(
             modifier = Modifier.weight(1f),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             AppImage(
                 model = media.thumbnailUri,
                 contentDescription = null,
@@ -50,7 +50,7 @@ fun SongSelectionItem(
                     .size(60.dp)
                     .clip(RoundedCornerShape(12.dp)),
 
-                placeholderType =  if (MediaType.AUDIO == media.mediaType) {
+                placeholderType = if (MediaType.AUDIO == media.mediaType) {
                     PlaceholderType.AUDIO
                 } else {
                     PlaceholderType.VIDEO
@@ -59,7 +59,8 @@ fun SongSelectionItem(
             )
             HorizontalSpacer(12.dp)
             Column(modifier = Modifier.weight(1f)) {
-                AppText(text = media.title ?: "",
+                AppText(
+                    text = media.title ?: "",
                     color = White,
                     maxLines = 1
                 )

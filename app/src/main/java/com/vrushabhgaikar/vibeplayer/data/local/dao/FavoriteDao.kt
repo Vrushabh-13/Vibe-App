@@ -15,17 +15,21 @@ interface FavoriteDao {
         favoriteSong: FavoriteSongEntity
     )
 
-    @Query("""
+    @Query(
+        """
         DELETE FROM favorite_songs
         WHERE mediaId = :mediaId
-    """)
+    """
+    )
     suspend fun removeFromFavorites(
         mediaId: Long
     )
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM favorite_songs
-    """)
+    """
+    )
     fun getFavoriteSongs():
             Flow<List<FavoriteSongEntity>>
 }

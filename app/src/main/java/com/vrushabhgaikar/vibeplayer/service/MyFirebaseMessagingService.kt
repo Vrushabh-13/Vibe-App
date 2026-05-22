@@ -42,9 +42,6 @@ class MyFirebaseMessagingService :
         val thumbnailUrl =
             remoteMessage.data["thumbnailUrl"] ?: ""
 
-//        val songId =
-//            System.currentTimeMillis()
-
         val songId =
             remoteMessage.data["songId"]
                 ?.toLongOrNull()

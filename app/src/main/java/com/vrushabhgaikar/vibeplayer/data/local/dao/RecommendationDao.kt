@@ -8,33 +8,40 @@ import com.vrushabhgaikar.vibeplayer.data.local.entity.RecommendedSongEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface RecommendationDao{
+interface RecommendationDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecommendation(
         song: RecommendedSongEntity
     )
-    @Query("""
+
+    @Query(
+        """
     SELECT * FROM recommended_songs
     ORDER BY isNewRecommendation DESC, id DESC
-""")
+"""
+    )
     fun getRecommendedSongs():
             Flow<List<RecommendedSongEntity>>
 
-    @Query("""
+    @Query(
+        """
         UPDATE recommended_songs
         SET isNewRecommendation = 0
         WHERE id = :songId
-    """)
+    """
+    )
     suspend fun markAsViewed(songId: Long)
 
-    @Query("""
+    @Query(
+        """
         SELECT EXISTS(
         SELECT 1
         FROM recommended_songs
         WHERE isNewRecommendation = 1
         )
-    """)
+    """
+    )
 
     fun hasNewRecommendations():
             Flow<Boolean>
@@ -42,10 +49,12 @@ interface RecommendationDao{
     @Query("DELETE FROM recommended_songs")
     suspend fun clearAll()
 
-    @Query("""
+    @Query(
+        """
     UPDATE recommended_songs
     SET isFav = :isFav
     WHERE id = :songId
-""")
+"""
+    )
     suspend fun updateFavorite(songId: Long, isFav: Boolean)
 }

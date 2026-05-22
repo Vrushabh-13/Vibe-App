@@ -7,7 +7,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 
-
 val TitleText = 20.sp
 val SectionTitle = 18.sp
 val SongTitle = 14.sp

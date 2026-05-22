@@ -10,9 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,17 +19,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppIcon
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppText
-import com.vrushabhgaikar.vibeplayer.ui.theme.LightGray
 import com.vrushabhgaikar.vibeplayer.ui.theme.PurplePrimary
 import com.vrushabhgaikar.vibeplayer.ui.theme.White
 
 
 @Composable
-fun QuickActionCard(icon: Painter, title: String, modifier: Modifier = Modifier, onClick: () -> Unit = {}){
+fun QuickActionCard(
+    icon: Painter,
+    title: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
     Card(
         modifier = modifier
             .height(90.dp)
-            .clickable{ onClick()},
+            .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -52,7 +54,6 @@ fun QuickActionCard(icon: Painter, title: String, modifier: Modifier = Modifier,
 
             AppText(title, color = White, fontSize = 10.sp, lineHeight = 10.sp)
 
-//            AppText(subtitle, color = LightGray, fontSize = 8.sp)
 
         }
     }

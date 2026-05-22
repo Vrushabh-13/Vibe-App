@@ -16,15 +16,19 @@ interface HistoryDao {
         historyEntity: HistoryEntity
     )
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM playback_history
         ORDER BY playedAt DESC
-    """)
+    """
+    )
     fun getHistory():
             Flow<List<HistoryEntity>>
 
-    @Query("""
+    @Query(
+        """
         DELETE FROM playback_history
-    """)
+    """
+    )
     suspend fun clearHistory()
 }

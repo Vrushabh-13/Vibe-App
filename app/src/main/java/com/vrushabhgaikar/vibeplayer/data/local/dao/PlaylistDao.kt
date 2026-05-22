@@ -17,9 +17,11 @@ interface PlaylistDao {
         playlist: PlaylistEntity
     )
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM playlists
-    """)
+    """
+    )
     fun getPlaylists():
             Flow<List<PlaylistEntity>>
 
@@ -28,18 +30,22 @@ interface PlaylistDao {
         crossRef: PlaylistSongCrossRef
     )
 
-    @Query("""
+    @Query(
+        """
         DELETE FROM playlist_songs
         WHERE playlistName = :playlistName
-    """)
+    """
+    )
     suspend fun clearPlaylistSongs(
         playlistName: String
     )
 
-    @Query("""
+    @Query(
+        """
         SELECT mediaId FROM playlist_songs
         WHERE playlistName = :playlistName
-    """)
+    """
+    )
     suspend fun getPlaylistSongIds(
         playlistName: String
     ): List<Long>

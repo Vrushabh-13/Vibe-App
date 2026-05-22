@@ -1,6 +1,6 @@
 package com.vrushabhgaikar.vibeplayer.data.model
 
-enum class MediaType{
+enum class MediaType {
     AUDIO,
     VIDEO
 }

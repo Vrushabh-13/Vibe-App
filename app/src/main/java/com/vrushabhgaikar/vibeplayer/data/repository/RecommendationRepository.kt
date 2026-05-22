@@ -38,6 +38,7 @@ class RecommendationRepository(
     suspend fun clearAll() {
         dao.clearAll()
     }
+
     suspend fun updateFavorite(id: Long, isFav: Boolean) {
         dao.updateFavorite(id, isFav)
     }

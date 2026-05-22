@@ -1,23 +1,16 @@
 package com.vrushabhgaikar.vibeplayer.presentation.screens.library.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -29,14 +22,15 @@ import com.vrushabhgaikar.vibeplayer.presentation.components.AppImage
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppText
 import com.vrushabhgaikar.vibeplayer.presentation.components.VerticalSpacer
 import com.vrushabhgaikar.vibeplayer.ui.theme.CardBg
-
 import com.vrushabhgaikar.vibeplayer.ui.theme.White
 
 @Composable
-fun PlaylistCard(name: String,
-                 songCount: Int,
-                 onClick: () -> Unit,
-                 onEditClick: () -> Unit){
+fun PlaylistCard(
+    name: String,
+    songCount: Int,
+    onClick: () -> Unit,
+    onEditClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .width(160.dp)
@@ -64,30 +58,23 @@ fun PlaylistCard(name: String,
                     color = White
                 )
             }
-            AppImage(painter = painterResource(id = R.drawable.img_edit_button),
+            AppImage(
+                painter = painterResource(id = R.drawable.img_edit_button),
                 modifier = Modifier
                     .size(30.dp)
                     .offset(x = 30.dp, y = 10.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .clickable{
+                    .clickable {
                         onEditClick()
                     },
                 contentDescription = stringResource(R.string.edit_button),
                 contentScale = ContentScale.Crop
 
-                )
+            )
 
         }
 
         VerticalSpacer(8.dp)
-
-//        AppText(
-//            text = "Edit",
-//            color = White,
-//            modifier = Modifier
-//                .clickable{
-//                    onEditClick()
-//                }
-//        )
+        
     }
 }

@@ -16,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.vrushabhgaikar.vibeplayer.navigation.NavGraph
@@ -25,9 +24,9 @@ import com.vrushabhgaikar.vibeplayer.presentation.components.AppBottomNavItem
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppMiniPlayer
 import com.vrushabhgaikar.vibeplayer.presentation.components.BottomBar
 import com.vrushabhgaikar.vibeplayer.presentation.player.PlayerBottomSheet
-import com.vrushabhgaikar.vibeplayer.ui.theme.VibePlayerTheme
 import com.vrushabhgaikar.vibeplayer.presentation.player.PlayerViewModel
 import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeViewModel
+import com.vrushabhgaikar.vibeplayer.ui.theme.VibePlayerTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,8 +50,8 @@ class MainActivity : ComponentActivity() {
                 }
                 val playerViewModel: PlayerViewModel by viewModels()
                 val homeViewModel: HomeViewModel by viewModels()
-                  MainScreen(playerViewModel,homeViewModel)
-//                OfflineMediaScreen()
+                MainScreen(playerViewModel, homeViewModel)
+
 
             }
 
@@ -70,7 +69,7 @@ fun MainScreen(
     val currentRoute =
         navController.currentBackStackEntryAsState().value?.destination?.route
 
-//    val showBottomBar = currentRoute != Routes.FAVORITES
+
     val bottomBarRoutes = listOf(
         Routes.HOME,
         Routes.SONGS,
@@ -88,31 +87,32 @@ fun MainScreen(
     Scaffold(
         bottomBar = {
             Column {
-                    if(playerState.isMiniPlayerVisible && playerState.currentMedia != null &&
-                        currentRoute != Routes.VIDEO_FULLSCREEN){
-                        AppMiniPlayer(
-                            media =  playerState.currentMedia!!,
-                            image = playerState.currentMedia?.thumbnailUri,
-                            title = playerState.currentMedia?.title?:"",
-                            artist = playerState.currentMedia?.artist?:"" ,
-                            isPlaying = playerState.isPlaying,
-                            onPlayerClick = {
-                                viewModel.onMiniPlayerClick()
-                            },
-                            onPlayPauseClick = {
-                                viewModel.togglePlayPause()
-                            },
-                            onLikeClick = {
-                                playerState.currentMedia?.let { media ->
+                if (playerState.isMiniPlayerVisible && playerState.currentMedia != null &&
+                    currentRoute != Routes.VIDEO_FULLSCREEN
+                ) {
+                    AppMiniPlayer(
+                        media = playerState.currentMedia!!,
+                        image = playerState.currentMedia?.thumbnailUri,
+                        title = playerState.currentMedia?.title ?: "",
+                        artist = playerState.currentMedia?.artist ?: "",
+                        isPlaying = playerState.isPlaying,
+                        onPlayerClick = {
+                            viewModel.onMiniPlayerClick()
+                        },
+                        onPlayPauseClick = {
+                            viewModel.togglePlayPause()
+                        },
+                        onLikeClick = {
+                            playerState.currentMedia?.let { media ->
 
-                                    val updatedMedia =
-                                        homeViewModel.toggleFavorite(media)
-                                    viewModel.onMediaUpdated(updatedMedia)
-                                }
-                            })
+                                val updatedMedia =
+                                    homeViewModel.toggleFavorite(media)
+                                viewModel.onMediaUpdated(updatedMedia)
+                            }
+                        })
 
-                    }
-                if(showBottomBar){
+                }
+                if (showBottomBar) {
                     BottomBar(
                         navController = navController,
                         items = items
@@ -121,12 +121,12 @@ fun MainScreen(
 
             }
         }
-    ){padding ->
-        Box(modifier = Modifier.padding(padding)){
+    ) { padding ->
+        Box(modifier = Modifier.padding(padding)) {
             NavGraph(
                 navController = navController,
                 homeViewModel = homeViewModel,
-                onSongClick = {media ->
+                onSongClick = { media ->
                     viewModel.onMediaSelected(media)
                 },
 
@@ -147,7 +147,8 @@ fun MainScreen(
         },
         viewModel = viewModel,
         homeViewModel = homeViewModel,
-        navController = navController)
+        navController = navController
+    )
 
 }
 

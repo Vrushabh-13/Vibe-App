@@ -5,7 +5,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
-import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
 import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,10 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
-
 class PlayerViewModel(application: Application) : AndroidViewModel(application) {
-
-//    private val playerManager = PlayerManager(application)
 
 
     private val _playerState = MutableStateFlow(PlayerUiState())
@@ -26,22 +22,6 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         observeProgress()
     }
 
-//    fun onMediaSelected(media: MediaItemModel){
-//      playerManager.play(media)
-//        PlayerManager.initialize(getApplication()) {
-//
-//            PlayerManager.play(media)
-//
-//        }
-//        if (media.playedDuration > 0L) {
-//            PlayerManager.seekTo(media.playedDuration)
-//        }
-//        _playerState.value = _playerState.value.copy(
-//            currentMedia = media,
-//            isMiniPlayerVisible = true,
-//            isPlaying = true
-//        )
-//    }
 
     fun onMediaSelected(media: MediaItemModel) {
 
@@ -72,49 +52,40 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun togglePlayPause(){
-        if(PlayerManager.isPlaying()){
+    fun togglePlayPause() {
+        if (PlayerManager.isPlaying()) {
             PlayerManager.pause()
-        }else{
+        } else {
             PlayerManager.resume()
         }
 
         _playerState.value = _playerState.value.copy(
-                isPlaying = PlayerManager.isPlaying()
+            isPlaying = PlayerManager.isPlaying()
         )
     }
 
-    fun dismissFullPlayer(){
+    fun dismissFullPlayer() {
         _playerState.value = _playerState.value.copy(
             isFullPlayerVisible = false
         )
     }
 
-    fun seekTo(progress: Float){
+    fun seekTo(progress: Float) {
         val duration = PlayerManager.duration()
         val newPosition = (progress * duration).toLong()
         PlayerManager.seekTo(newPosition)
     }
 
-    fun seekForward10(){
+    fun seekForward10() {
         val newPos = PlayerManager.currentPosition() + 10_000
         PlayerManager.seekTo(newPos)
     }
 
-    fun seekBackward10(){
+    fun seekBackward10() {
         val newPos = PlayerManager.currentPosition() - 10_000
         PlayerManager.seekTo(newPos.coerceAtLeast(0))
     }
 
-//    fun toggleLike(){
-//        val currentMedia = _playerState.value.currentMedia ?: return
-//        val updatedMedia = currentMedia.copy(
-//            isFav =  !currentMedia.isFav
-//        )
-//        _playerState.value = _playerState.value.copy(
-//            currentMedia = updatedMedia
-//        )
-//    }
 
     fun onMediaUpdated(updatedMedia: MediaItemModel) {
 
@@ -126,12 +97,13 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
             )
         }
     }
-fun updatedCurrentMedia(media: MediaItemModel){
-    _playerState.value =
-        _playerState.value.copy(currentMedia = media)
-}
 
-    fun toggleRepeat(){
+    fun updatedCurrentMedia(media: MediaItemModel) {
+        _playerState.value =
+            _playerState.value.copy(currentMedia = media)
+    }
+
+    fun toggleRepeat() {
 
         val enabled = !_playerState.value.isRepeatEnabled
         PlayerManager.setRepeatMode(enabled)
@@ -183,38 +155,10 @@ fun updatedCurrentMedia(media: MediaItemModel){
     }
 
 
-
-
-
-
-
-
-//    private val _playerState = MutableStateFlow(PlayerUiState())
-//    val playerState = _playerState.asStateFlow()
-//
-//    fun onSongSelected(media: MediaItemModel) {
-//        _playerState.value = PlayerUiState(
-//            currentMedia = media,
-//            isMiniPlayerVisible = true,
-//            isPlaying = true
-//        )
-//    }
-//
     fun onMiniPlayerClick() {
         _playerState.value = _playerState.value.copy(
             isFullPlayerVisible = true
         )
     }
-//
-//    fun onDismissFullPlayer() {
-//        _playerState.value = _playerState.value.copy(
-//            isFullPlayerVisible = false
-//        )
-//    }
-//
-//    fun togglePlayPause() {
-//        _playerState.value = _playerState.value.copy(
-//            isPlaying = !_playerState.value.isPlaying
-//        )
-//    }
+
 }

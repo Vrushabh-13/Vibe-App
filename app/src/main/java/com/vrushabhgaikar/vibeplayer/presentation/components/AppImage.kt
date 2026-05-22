@@ -1,19 +1,17 @@
 package com.vrushabhgaikar.vibeplayer.presentation.components
 
-import androidx.compose.ui.graphics.Color
-import android.graphics.ColorFilter
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.vrushabhgaikar.vibeplayer.R
 import com.vrushabhgaikar.vibeplayer.domain.model.PlaceholderType
 import com.vrushabhgaikar.vibeplayer.utils.AppUtils
 

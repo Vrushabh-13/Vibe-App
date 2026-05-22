@@ -20,17 +20,17 @@ import com.vrushabhgaikar.vibeplayer.navigation.Routes
 fun BottomBar(
     navController: NavController,
     items: List<AppBottomNavItem>
-){
+) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface
     ) {
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
-        items.forEach {item ->
+        items.forEach { item ->
             NavigationBarItem(
                 selected = currentRoute == item.route,
                 onClick = {
-                    navController.navigate(item.route){
+                    navController.navigate(item.route) {
                         popUpTo(Routes.HOME)
                         launchSingleTop = true
                     }

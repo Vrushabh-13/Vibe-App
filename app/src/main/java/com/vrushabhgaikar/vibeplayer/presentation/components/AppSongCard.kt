@@ -1,7 +1,6 @@
 package com.vrushabhgaikar.vibeplayer.presentation.components
 
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,7 +40,7 @@ fun AppSongCard(
     modifier: Modifier = Modifier,
     showNewChip: Boolean = false
 
-    ){
+) {
     Column(
         modifier = modifier
             .width(120.dp)
@@ -52,9 +52,9 @@ fun AppSongCard(
                     color = LightGray,
                     shape = RoundedCornerShape(16)
                 )
-        ){
+        ) {
             AppImage(
-                model = media.thumbnailUri ,
+                model = media.thumbnailUri,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -62,18 +62,19 @@ fun AppSongCard(
                     .height(120.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .clickable(onClick = onClick),
-                placeholderType = if (media.mediaType == MediaType.VIDEO){
-                    PlaceholderType.VIDEO}else PlaceholderType.AUDIO
+                placeholderType = if (media.mediaType == MediaType.VIDEO) {
+                    PlaceholderType.VIDEO
+                } else PlaceholderType.AUDIO
             )
-            AppGradientOverlay( modifier = Modifier.matchParentSize())
+            AppGradientOverlay(modifier = Modifier.matchParentSize())
 
             if (showNewChip) {
 
                 Box(
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(6.dp)
                         .background(
-                            Color.Red,
+                            Color(MaterialTheme.colorScheme.primary.value),
                             RoundedCornerShape(8.dp)
                         )
                         .padding(
@@ -85,7 +86,7 @@ fun AppSongCard(
                     AppText(
                         text = "NEW",
                         color = White,
-                        fontSize = 10.sp
+                        fontSize = 8.sp
                     )
                 }
             }
@@ -112,7 +113,7 @@ fun AppSongCard(
                     contentDescription = null,
                     tint = White,
                     modifier = Modifier
-                    .size(14.dp)
+                        .size(14.dp)
                 )
             }
         }
@@ -123,28 +124,29 @@ fun AppSongCard(
                 modifier = Modifier.weight(1f)
             ) {
                 AppText(
-                    text = media.title?:"",
+                    text = media.title ?: "",
                     color = White,
                     fontSize = 14.sp,
                     maxLines = 1
                 )
 
                 AppText(
-                    text = media.artist?:"",
+                    text = media.artist ?: "",
                     color = LightGray,
                     fontSize = 12.sp,
                     maxLines = 1
                 )
             }
 
-            AppIcon(painter = painterResource(
-                id =
-                    if(media.isFav)
-                        R.drawable.ic_heart_fill
-                    else
-                        R.drawable.ic_like
-            ),
-                tint =  if(media.isFav)
+            AppIcon(
+                painter = painterResource(
+                    id =
+                        if (media.isFav)
+                            R.drawable.ic_heart_fill
+                        else
+                            R.drawable.ic_like
+                ),
+                tint = if (media.isFav)
                     PurplePrimary
                 else
                     LightGray,
@@ -153,7 +155,7 @@ fun AppSongCard(
                     .align(Alignment.CenterVertically)
                     .padding(8.dp)
                     .clip(shape = CircleShape)
-                    .clickable{
+                    .clickable {
                         onIsFavClick()
                     }
             )

@@ -18,14 +18,13 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.PlayerView
 import androidx.navigation.NavController
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppIcon
-import com.vrushabhgaikar.vibeplayer.presentation.player.PlayerViewModel
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 fun VideoFullScreen(
     navController: NavController,
     onCloseFullScreen: () -> Unit
-    ){
+) {
     val context = LocalContext.current
     val activity = context as Activity
 
@@ -42,9 +41,9 @@ fun VideoFullScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-    ){
+    ) {
         AndroidView(
-            factory = {ctx ->
+            factory = { ctx ->
                 PlayerView(ctx).apply {
                     player = PlayerManager.getController()
                     useController = true

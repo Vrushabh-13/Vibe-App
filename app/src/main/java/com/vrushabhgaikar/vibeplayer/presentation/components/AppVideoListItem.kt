@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,19 +35,21 @@ import com.vrushabhgaikar.vibeplayer.ui.theme.White
 import com.vrushabhgaikar.vibeplayer.utils.TimeUtils
 
 @Composable
-fun AppVideoListItem(media: MediaItemModel,
-                     onClick: () -> Unit,
-                     onIsFavClick: () -> Unit = {}){
-    Column{
+fun AppVideoListItem(
+    media: MediaItemModel,
+    onClick: () -> Unit,
+    onIsFavClick: () -> Unit = {}
+) {
+    Column {
         Row(
-           modifier = Modifier
-               .fillMaxWidth()
-               .padding(horizontal = 16.dp, vertical = 10.dp)
-               .clickable {
-                   onClick()
-               },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 10.dp)
+                .clickable {
+                    onClick()
+                },
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Box(
                 modifier = Modifier
                     .border(
@@ -56,7 +57,7 @@ fun AppVideoListItem(media: MediaItemModel,
                         color = LightGray,
                         shape = RoundedCornerShape(10)
                     )
-            ){
+            ) {
                 AppImage(
                     model = media.thumbnailUri,
                     contentDescription = null,
@@ -68,11 +69,13 @@ fun AppVideoListItem(media: MediaItemModel,
                 )
                 AppGradientOverlay(modifier = Modifier.matchParentSize())
                 AppIcon(
-                    painter = painterResource(id =
-                        if(media.mediaType == MediaType.AUDIO)
-                            R.drawable.img_music_icon
-                        else
-                            R.drawable.img_video_icon),
+                    painter = painterResource(
+                        id =
+                            if (media.mediaType == MediaType.AUDIO)
+                                R.drawable.img_music_icon
+                            else
+                                R.drawable.img_video_icon
+                    ),
                     contentDescription = null,
                     tint = White,
                     modifier = Modifier
@@ -104,35 +107,34 @@ fun AppVideoListItem(media: MediaItemModel,
 
             Column(modifier = Modifier.weight(1f)) {
 
-                AppText(media.title?:"", color = White, fontSize = 14.sp, maxLines = 2)
+                AppText(media.title ?: "", color = White, fontSize = 14.sp, maxLines = 2)
 
                 VerticalSpacer(4.dp)
 
-                AppText(media.artist?:"", color = LightGray, fontSize = 12.sp)
+                AppText(media.artist ?: "", color = LightGray, fontSize = 12.sp)
 
                 VerticalSpacer(2.dp)
 
-//                AppText(
-//                    "8.4M views • 1 month ago",
-//                    color = LightGray,
-//                    fontSize = 11.sp
-//                )
+
             }
             Column(horizontalAlignment = Alignment.End) {
 
                 AppIcon(
-                    painter = painterResource(if(media.isFav)
-                        R.drawable.ic_heart_fill
-                    else
-                        R.drawable.ic_like),
+                    painter = painterResource(
+                        if (media.isFav)
+                            R.drawable.ic_heart_fill
+                        else
+                            R.drawable.ic_like
+                    ),
                     contentDescription = null,
-                    tint = if(media.isFav)
+                    tint = if (media.isFav)
                         PurplePrimary
                     else
                         LightGray,
-                    modifier = Modifier.size(22.dp)
+                    modifier = Modifier
+                        .size(22.dp)
                         .clip(shape = CircleShape)
-                        .clickable{
+                        .clickable {
                             onIsFavClick()
                         }
                 )

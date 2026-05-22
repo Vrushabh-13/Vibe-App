@@ -19,33 +19,20 @@ fun AppSectionTitle(
     title: String,
     onViewAllClick: () -> Unit = {},
     modifier: Modifier = Modifier
-){
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
-    ){
-        AppText(text = title,
+    ) {
+        AppText(
+            text = title,
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
-            color = White)
-
-//        Row(
-//            verticalAlignment = Alignment.CenterVertically,
-//            modifier = Modifier.clickable{ onViewAllClick()}
-//        ) {
-//            Text(
-//                text = "View all",
-//                fontSize = 14.sp,
-//                color = LightGray
-//            )
-//            Icon(painter = painterResource(id = R.drawable.ic_arrow_right),
-//                contentDescription = null,
-//                tint = LightGray)
-//
-//        }
+            color = White
+        )
 
 
     }

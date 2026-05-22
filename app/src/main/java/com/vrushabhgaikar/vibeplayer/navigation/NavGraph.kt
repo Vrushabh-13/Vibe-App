@@ -1,14 +1,13 @@
 package com.vrushabhgaikar.vibeplayer.navigation
 
-import com.vrushabhgaikar.vibeplayer.presentation.screens.library.FavoritesScreen
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
 import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeScreen
 import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeViewModel
+import com.vrushabhgaikar.vibeplayer.presentation.screens.library.FavoritesScreen
 import com.vrushabhgaikar.vibeplayer.presentation.screens.library.HistoryScreen
 import com.vrushabhgaikar.vibeplayer.presentation.screens.library.LibraryScreen
 import com.vrushabhgaikar.vibeplayer.presentation.screens.library.PlaylistDetailsScreen
@@ -19,17 +18,19 @@ import com.vrushabhgaikar.vibeplayer.presentation.screens.video.VideoScreen
 
 
 @Composable
-fun NavGraph(navController: NavHostController,
-             homeViewModel: HomeViewModel,
-             onSongClick: (MediaItemModel) -> Unit,
-             onMediaUpdated: (MediaItemModel) -> Unit,
-             onCloseVideoFullScreen: () -> Unit){
+fun NavGraph(
+    navController: NavHostController,
+    homeViewModel: HomeViewModel,
+    onSongClick: (MediaItemModel) -> Unit,
+    onMediaUpdated: (MediaItemModel) -> Unit,
+    onCloseVideoFullScreen: () -> Unit
+) {
 
     NavHost(
         navController = navController,
         startDestination = Routes.HOME
-    ){
-        composable(Routes.HOME){
+    ) {
+        composable(Routes.HOME) {
             HomeScreen(
                 viewModel = homeViewModel,
                 onSongClick = onSongClick,
@@ -37,7 +38,7 @@ fun NavGraph(navController: NavHostController,
             )
         }
 
-        composable(Routes.SONGS){
+        composable(Routes.SONGS) {
             SongsScreen(
                 viewModel = homeViewModel,
                 onSongClick = onSongClick,
@@ -45,7 +46,7 @@ fun NavGraph(navController: NavHostController,
             )
         }
 
-        composable(Routes.VIDEO){
+        composable(Routes.VIDEO) {
             VideoScreen(
                 viewModel = homeViewModel,
                 onVideoClick = { media ->
@@ -55,8 +56,9 @@ fun NavGraph(navController: NavHostController,
             )
         }
 
-        composable(Routes.LIBRARY){
-            LibraryScreen(viewModel = homeViewModel,
+        composable(Routes.LIBRARY) {
+            LibraryScreen(
+                viewModel = homeViewModel,
                 navController = navController,
                 onOpenFavorites = {
                     navController.navigate(Routes.FAVORITES)
@@ -76,7 +78,7 @@ fun NavGraph(navController: NavHostController,
                 }
             )
         }
-        composable(Routes.HISTORY){
+        composable(Routes.HISTORY) {
             HistoryScreen(
                 viewModel = homeViewModel,
                 onSongClick = onSongClick,
@@ -120,13 +122,12 @@ fun NavGraph(navController: NavHostController,
             )
         }
 
-        composable(Routes.VIDEO_FULLSCREEN){
+        composable(Routes.VIDEO_FULLSCREEN) {
             VideoFullScreen(
                 navController = navController,
                 onCloseFullScreen = onCloseVideoFullScreen
-                )
+            )
         }
-
 
 
     }

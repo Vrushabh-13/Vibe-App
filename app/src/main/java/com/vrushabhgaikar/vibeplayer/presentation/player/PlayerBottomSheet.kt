@@ -5,7 +5,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
 import com.vrushabhgaikar.vibeplayer.navigation.Routes
@@ -15,24 +14,25 @@ import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlayerBottomSheet(
-     uiState: PlayerUiState,
+    uiState: PlayerUiState,
     onDismiss: () -> Unit,
-     viewModel: PlayerViewModel,
-     homeViewModel: HomeViewModel,
-     navController: NavHostController
-){
+    viewModel: PlayerViewModel,
+    homeViewModel: HomeViewModel,
+    navController: NavHostController
+) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
-    if(uiState.isFullPlayerVisible && uiState.currentMedia != null){
+    if (uiState.isFullPlayerVisible && uiState.currentMedia != null) {
         ModalBottomSheet(
             sheetState = sheetState,
             onDismissRequest = onDismiss,
             containerColor = MaterialTheme.colorScheme.background
         ) {
-            when(uiState.currentMedia?.mediaType){
+            when (uiState.currentMedia?.mediaType) {
                 MediaType.AUDIO -> {
-                    AudioPlayerContent(uiState = uiState,
+                    AudioPlayerContent(
+                        uiState = uiState,
                         onSeek = { progress ->
                             viewModel.seekTo(progress)
                         },
@@ -46,11 +46,11 @@ fun PlayerBottomSheet(
                             viewModel.seekBackward10()
                         },
                         isFav = {
-                             uiState.currentMedia?.let {media ->
-                                 val updatedMedia = homeViewModel.toggleFavorite(media)
-                                 viewModel.updatedCurrentMedia(updatedMedia)
+                            uiState.currentMedia?.let { media ->
+                                val updatedMedia = homeViewModel.toggleFavorite(media)
+                                viewModel.updatedCurrentMedia(updatedMedia)
 
-                             }
+                            }
                         },
                         onRepeat = {
                             viewModel.toggleRepeat()
@@ -71,13 +71,14 @@ fun PlayerBottomSheet(
                             navController.navigate(Routes.VIDEO_FULLSCREEN)
                         },
                         isFav = {
-                            uiState.currentMedia?.let {media ->
+                            uiState.currentMedia?.let { media ->
                                 val updatedMedia = homeViewModel.toggleFavorite(media)
                                 viewModel.updatedCurrentMedia(updatedMedia)
 
                             }
                         })
                 }
+
                 else -> {}
             }
         }
