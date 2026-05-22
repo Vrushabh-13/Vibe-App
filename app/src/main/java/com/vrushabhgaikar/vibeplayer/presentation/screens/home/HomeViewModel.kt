@@ -15,10 +15,14 @@ import com.vrushabhgaikar.vibeplayer.domain.model.SourceType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.http.Query
 import javax.xml.transform.Source
 import com.vrushabhgaikar.vibeplayer.data.manager.RecommendationManager
 import com.vrushabhgaikar.vibeplayer.data.repository.RecommendationRepository
+import com.vrushabhgaikar.vibeplayer.data.local.entity.FavoriteSongEntity
+import com.vrushabhgaikar.vibeplayer.data.repository.FavoriteRepository
+import com.vrushabhgaikar.vibeplayer.data.repository.HistoryRepository
+import com.vrushabhgaikar.vibeplayer.data.repository.PlaylistRepository
+import kotlinx.coroutines.flow.first
 
 class HomeViewModel(
     application: Application
@@ -53,7 +57,24 @@ class HomeViewModel(
     private val db = DatabaseProvider.getDatabase(application)
     private val repo = RecommendationRepository(db.recommendationDao())
 
+    private val favoriteRepository =
+        FavoriteRepository(db.favoriteDao())
+
+    private val historyRepository =
+        HistoryRepository(db.historyDao())
+
+    private val playlistRepository =
+        PlaylistRepository(db.playlistDao())
+
     val recommendedSongs = repo.getRecommendations()
+
+
+    private val _playlists =
+        MutableStateFlow<List<PlaylistModel>>(emptyList())
+
+    val playlists: StateFlow<List<PlaylistModel>>
+            = _playlists
+
 //    private val _recommendedSongs =
 //        MutableStateFlow<List<MediaItemModel>>(emptyList())
 //
@@ -109,54 +130,81 @@ class HomeViewModel(
     val videoSearchQuery: StateFlow<String>
             = _videoSearchQuery
 
-    private val _playlists =
-        MutableStateFlow<List<PlaylistModel>>(emptyList())
+//    private val _playlists =
+//        MutableStateFlow<List<PlaylistModel>>(emptyList())
+//
+//    val playlists: StateFlow<List<PlaylistModel>>
+//            = _playlists
 
-    val playlists: StateFlow<List<PlaylistModel>>
-            = _playlists
 
 
+//    fun createPlaylist(name: String) {
+//
+//        if (name.isBlank()) return
+//
+//        val current = _playlists.value.toMutableList()
+//
+//        val alreadyExists =
+//            current.any {
+//                it.name == name
+//            }
+//
+//        if (!alreadyExists) {
+//
+//            current.add(
+//                PlaylistModel(name = name)
+//            )
+//
+//            _playlists.value = current
+//        }
+//    }
 
     fun createPlaylist(name: String) {
 
         if (name.isBlank()) return
 
-        val current = _playlists.value.toMutableList()
+        viewModelScope.launch {
 
-        val alreadyExists =
-            current.any {
-                it.name == name
-            }
-
-        if (!alreadyExists) {
-
-            current.add(
-                PlaylistModel(name = name)
-            )
-
-            _playlists.value = current
+            playlistRepository.createPlaylist(name)
         }
     }
+
+//    fun saveSongsToPlaylist(
+//        playlistName: String,
+//        mediaIds: List<Long>
+//    ) {
+//        if (playlistName.isBlank())return
+//        _playlists.value =
+//            _playlists.value.map { playlist ->
+//
+//                if (playlist.name == playlistName) {
+//
+//                    playlist.copy(
+//                        mediaIds = mediaIds.distinct()
+//                    )
+//
+//                } else {
+//                    playlist
+//                }
+//            }
+//    }
 
     fun saveSongsToPlaylist(
         playlistName: String,
         mediaIds: List<Long>
     ) {
-        if (playlistName.isBlank())return
-        _playlists.value =
-            _playlists.value.map { playlist ->
 
-                if (playlist.name == playlistName) {
+        viewModelScope.launch {
 
-                    playlist.copy(
-                        mediaIds = mediaIds.distinct()
-                    )
+            playlistRepository.savePlaylistSongs(
+                playlistName = playlistName,
+                mediaIds = mediaIds
+            )
 
-                } else {
-                    playlist
-                }
-            }
+            loadPlaylistsFromRoom()
+        }
     }
+
     fun getPlaylistSongs(
         playlistName: String
     ): List<MediaItemModel> {
@@ -365,6 +413,91 @@ class HomeViewModel(
                 }
         }
     }
+    private fun syncFavoritesFromRoom() {
+
+        viewModelScope.launch {
+
+            favoriteRepository
+                .getFavorites()
+                .collect { favorites ->
+
+                    val favoriteIds =
+                        favorites.map { it.mediaId }
+
+                    _allMediaList.value =
+                        _allMediaList.value.map { media ->
+
+                            media.copy(
+                                isFav =
+                                    favoriteIds.contains(media.id)
+                            )
+                        }
+
+                    updateHomeSections()
+                    applySongFilters()
+                    applyVideoFilters()
+                }
+        }
+    }
+
+    private fun syncHistoryFromRoom() {
+
+        viewModelScope.launch {
+
+            historyRepository
+                .getHistory()
+                .collect { historyList ->
+
+                    _allMediaList.value =
+                        _allMediaList.value.map { media ->
+
+                            val history =
+                                historyList.find {
+                                    it.mediaId == media.id
+                                }
+
+                            if (history != null) {
+
+                                media.copy(
+                                    playedAt = history.playedAt
+                                )
+
+                            } else {
+                                media
+                            }
+                        }
+
+                    updateHomeSections()
+                }
+        }
+    }
+    private fun loadPlaylistsFromRoom() {
+
+        viewModelScope.launch {
+
+            _playlists.value = emptyList()
+
+            playlistRepository
+                .getPlaylists()
+                .collect { playlistEntities ->
+
+                    val playlistModels =
+                        playlistEntities.map { entity ->
+
+                            val mediaIds =
+                                playlistRepository
+                                    .getPlaylistSongIds(entity.name)
+
+                            PlaylistModel(
+                                name = entity.name,
+                                mediaIds = mediaIds
+                            )
+                        }
+
+                    _playlists.value = playlistModels
+                }
+        }
+    }
 
 
     fun loadMedia() {
@@ -382,6 +515,12 @@ class HomeViewModel(
              _allMediaList.value =
                 repository.getAllMedia()
 
+            syncFavoritesFromRoom()
+
+            syncHistoryFromRoom()
+
+            loadPlaylistsFromRoom()
+
 //            setSongFilter(SourceType.ALL.value)
               applySongFilters()
 
@@ -389,7 +528,7 @@ class HomeViewModel(
             updateHomeSections()
             applyVideoFilters()
 
-            repo.clearAll()
+//            repo.clearAll()
 //
 //            _allMediaList.value
 //                .filter {
@@ -457,6 +596,14 @@ class HomeViewModel(
             }
         }
         updateHomeSections()
+
+        viewModelScope.launch {
+
+            media.id?.let {
+
+                historyRepository.addToHistory(it)
+            }
+        }
     }
     private fun updateHomeSections() {
 
@@ -518,9 +665,31 @@ class HomeViewModel(
         applyVideoFilters()
         updateHomeSections()
 
+//        viewModelScope.launch {
+//            repo.updateFavorite(
+//                id = updatedMedia.id ?: return@launch,
+//                isFav = updatedMedia.isFav
+//            )
+//        }
+
         viewModelScope.launch {
+
+            val mediaId =
+                updatedMedia.id ?: return@launch
+
+            if (updatedMedia.isFav) {
+
+                favoriteRepository
+                    .addToFavorites(mediaId)
+
+            } else {
+
+                favoriteRepository
+                    .removeFromFavorites(mediaId)
+            }
+
             repo.updateFavorite(
-                id = updatedMedia.id ?: return@launch,
+                id = mediaId,
                 isFav = updatedMedia.isFav
             )
         }

@@ -62,7 +62,8 @@ fun AppSongCard(
                     .height(120.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .clickable(onClick = onClick),
-                placeholderType = PlaceholderType.AUDIO
+                placeholderType = if (media.mediaType == MediaType.VIDEO){
+                    PlaceholderType.VIDEO}else PlaceholderType.AUDIO
             )
             AppGradientOverlay( modifier = Modifier.matchParentSize())
 

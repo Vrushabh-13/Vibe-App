@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.vrushabhgaikar.vibeplayer.R
 import com.vrushabhgaikar.vibeplayer.R.drawable.img_music_thumb
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
+import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
 import com.vrushabhgaikar.vibeplayer.domain.model.PlaceholderType
 import com.vrushabhgaikar.vibeplayer.ui.theme.CardBg
 import com.vrushabhgaikar.vibeplayer.ui.theme.LightGray
@@ -74,7 +75,8 @@ fun AppMiniPlayer(
                     modifier = Modifier
                         .size(50.dp)
                         .clip(RoundedCornerShape(8.dp)),
-                    placeholderType = PlaceholderType.AUDIO
+                    placeholderType = if (media.mediaType == MediaType.VIDEO){
+                        PlaceholderType.VIDEO}else PlaceholderType.AUDIO
                 )
                 AppGradientOverlay( modifier = Modifier.matchParentSize())
             }
