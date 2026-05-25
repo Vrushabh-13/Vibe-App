@@ -54,12 +54,11 @@ fun AppMiniPlayer(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(CardBg)
-                .clickable { onPlayerClick() } // full bar clickable
+                .clickable { onPlayerClick() }
                 .padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            // 🔹 Left: Image
             Box(
                 modifier = Modifier
                     .border(
@@ -85,7 +84,6 @@ fun AppMiniPlayer(
 
             Spacer(modifier = Modifier.width(10.dp))
 
-            // 🔹 Middle: Title + Artist
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -104,7 +102,6 @@ fun AppMiniPlayer(
                 )
             }
 
-            // 🔹 Right: Like Button
             AppIcon(
                 painter = painterResource(
                     if (media.isFav)
@@ -125,7 +122,6 @@ fun AppMiniPlayer(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // 🔹 Play / Pause Button
             AppIcon(
                 painter = painterResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
                 contentDescription = null,

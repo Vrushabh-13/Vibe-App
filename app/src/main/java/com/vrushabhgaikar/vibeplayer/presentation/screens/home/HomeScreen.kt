@@ -1,7 +1,6 @@
 package com.vrushabhgaikar.vibeplayer.presentation.screens.home
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.vrushabhgaikar.vibeplayer.R
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
@@ -59,7 +59,8 @@ fun HomeScreen(
     ) {
 
         if (recentlyPlayed.value.isNotEmpty()) {
-            item { AppSectionTitle(stringResource(R.string.recently_played)) }
+           item { AppSectionTitle(stringResource(R.string.recently_played)) }
+
             item {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -104,8 +105,8 @@ fun HomeScreen(
                         id = song.id,
                         title = song.title,
                         artist = song.artist,
-                        uri = Uri.parse(song.songUrl),
-                        thumbnailUri = Uri.parse(song.thumbnailUrl),
+                        uri = song.songUrl.toUri(),
+                        thumbnailUri = song.thumbnailUrl.toUri(),
                         mediaType = MediaType.AUDIO,
                         sourceType = SourceType.ONLINE,
                         isFav = song.isFav,

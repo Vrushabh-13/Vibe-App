@@ -43,14 +43,14 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         )
     }
 
-    fun syncFavorite(mediaId: Long, homeViewModel: HomeViewModel) {
-        val updated = homeViewModel.getMediaById(mediaId)
-        updated?.let {
-            _playerState.value = _playerState.value.copy(
-                currentMedia = it
-            )
-        }
-    }
+//    fun syncFavorite(mediaId: Long, homeViewModel: HomeViewModel) {
+//        val updated = homeViewModel.getMediaById(mediaId)
+//        updated?.let {
+//            _playerState.value = _playerState.value.copy(
+//                currentMedia = it
+//            )
+//        }
+//    }
 
     fun togglePlayPause() {
         if (PlayerManager.isPlaying()) {

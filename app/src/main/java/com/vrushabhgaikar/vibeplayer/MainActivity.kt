@@ -50,24 +50,22 @@ class MainActivity : ComponentActivity() {
                 }
                 val playerViewModel: PlayerViewModel by viewModels()
                 val homeViewModel: HomeViewModel by viewModels()
-                MainScreen(playerViewModel, homeViewModel)
-
-
+                MainScreen(playerViewModel , homeViewModel)
+     //       TestScreen()
             }
 
         }
     }
-}
 
-@Composable
-fun MainScreen(
-    viewModel: PlayerViewModel,
-    homeViewModel: HomeViewModel
-) {
+
+    @Composable
+    fun MainScreen(
+        viewModel: PlayerViewModel,
+        homeViewModel: HomeViewModel
+    ) {
     val playerState by viewModel.playerState.collectAsState()
     val navController = rememberNavController()
-    val currentRoute =
-        navController.currentBackStackEntryAsState().value?.destination?.route
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
 
     val bottomBarRoutes = listOf(
@@ -150,5 +148,6 @@ fun MainScreen(
         navController = navController
     )
 
+}
 }
 

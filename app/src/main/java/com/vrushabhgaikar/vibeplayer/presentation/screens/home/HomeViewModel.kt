@@ -25,17 +25,17 @@ class HomeViewModel(
     private val repository = MediaRepositoryImpl(
         MediaStoreReader(application)
     )
-
     private var isLoaded = false
-    private val _audioListLocal = MutableStateFlow<List<MediaItemModel>>(emptyList())
-    val audioListLocal: StateFlow<List<MediaItemModel>> = _audioListLocal
+//    private val _audioListLocal = MutableStateFlow<List<MediaItemModel>>(emptyList())
+//    val audioListLocal: StateFlow<List<MediaItemModel>> = _audioListLocal
 
-    private val _videoListLocal = MutableStateFlow<List<MediaItemModel>>(emptyList())
-    val videoListLocal: StateFlow<List<MediaItemModel>> = _videoListLocal
+//    private val _videoListLocal = MutableStateFlow<List<MediaItemModel>>(emptyList())
+//    val videoListLocal: StateFlow<List<MediaItemModel>> = _videoListLocal
 
 
     private val _allMediaList = MutableStateFlow<List<MediaItemModel>>(emptyList())
     val allMediaList: StateFlow<List<MediaItemModel>> = _allMediaList
+
 
     private val _recentlyPlayedList =
         MutableStateFlow<List<MediaItemModel>>(emptyList())
@@ -255,16 +255,14 @@ class HomeViewModel(
     }
 
 
-    fun getMediaById(id: Long): MediaItemModel? {
-        return _allMediaList.value.find { it.id == id }
-    }
+//    fun getMediaById(id: Long): MediaItemModel? {
+//        return _allMediaList.value.find { it.id == id }
+//    }
 
     fun setSongFilter(filter: String) {
 
         _songFilter.value = filter
         applySongFilters()
-
-
     }
 
 
@@ -395,11 +393,11 @@ class HomeViewModel(
         isLoaded = true
         viewModelScope.launch {
 
-            _audioListLocal.value =
-                repository.getLocalAudio()
-
-            _videoListLocal.value =
-                repository.getLocalVideos()
+//            _audioListLocal.value =
+//                repository.getLocalAudio()
+//
+//            _videoListLocal.value =
+//                repository.getLocalVideos()
 
             _allMediaList.value =
                 repository.getAllMedia()
@@ -476,7 +474,6 @@ class HomeViewModel(
                 .take(5)
 
 
-
         _trendingVideos.value =
             _allMediaList.value
                 .filter { it.mediaType == MediaType.VIDEO }
@@ -509,7 +506,7 @@ class HomeViewModel(
 
                 if (it.id == media.id) {
 
-                    updatedMedia = it.copy(
+                    updatedMedia = updatedMedia.copy(
                         isFav = !it.isFav
                     )
 
