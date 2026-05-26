@@ -51,7 +51,6 @@ class MainActivity : ComponentActivity() {
                 val playerViewModel: PlayerViewModel by viewModels()
                 val homeViewModel: HomeViewModel by viewModels()
                 MainScreen(playerViewModel , homeViewModel)
-     //       TestScreen()
             }
 
         }
