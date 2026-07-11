@@ -4,6 +4,8 @@ import PlayerManager
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.vrushabhgaikar.vibeplayer.data.local.database.DatabaseProvider
+import com.vrushabhgaikar.vibeplayer.data.repository.HistoryRepository
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
 import com.vrushabhgaikar.vibeplayer.presentation.screens.home.HomeViewModel
 import kotlinx.coroutines.delay
@@ -18,12 +20,22 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     private val _playerState = MutableStateFlow(PlayerUiState())
     val playerState = _playerState.asStateFlow()
 
+    private val db =
+        DatabaseProvider.getDatabase(application)
+
+    private val historyRepository =
+        HistoryRepository(db.historyDao())
+
     init {
         observeProgress()
     }
 
 
     fun onMediaSelected(media: MediaItemModel) {
+
+        _playerState.value.currentMedia?.let {
+            savePlaybackProgress()
+        }
 
         PlayerManager.initialize(getApplication()) {
             PlayerManager.play(media)
@@ -37,7 +49,6 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
             currentMedia = media,
 
             isMiniPlayerVisible = true,
-
 
             isPlaying = true
         )
@@ -54,6 +65,7 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
 
     fun togglePlayPause() {
         if (PlayerManager.isPlaying()) {
+            savePlaybackProgress()
             PlayerManager.pause()
         } else {
             PlayerManager.resume()
@@ -159,6 +171,21 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         _playerState.value = _playerState.value.copy(
             isFullPlayerVisible = true
         )
+    }
+
+    private fun savePlaybackProgress() {
+
+        val media =
+            _playerState.value.currentMedia ?: return
+
+        viewModelScope.launch {
+
+            historyRepository.addToHistory(
+                mediaId = media.id ?: return@launch,
+                playedDuration =
+                    PlayerManager.currentPosition()
+            )
+        }
     }
 
 }

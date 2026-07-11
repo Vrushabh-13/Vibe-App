@@ -52,6 +52,11 @@ fun AudioPlayerContent(
     val progress = if (uiState.duration > 0) {
         uiState.currentPosition.toFloat() / uiState.duration
     } else 0f
+    val durationText =
+        if (uiState.duration > 0)
+            TimeUtils.formatDuration(uiState.duration)
+        else
+            "Unavailable"
 
     Column(
         modifier = Modifier
@@ -143,7 +148,8 @@ fun AudioPlayerContent(
             )
 
             AppText(
-                text = TimeUtils.formatDuration(uiState.duration),
+//                text = TimeUtils.formatDuration(uiState.duration),
+                text = durationText,
                 color = LightGray
             )
         }

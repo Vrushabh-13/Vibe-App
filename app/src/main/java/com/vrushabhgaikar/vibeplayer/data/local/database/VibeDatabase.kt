@@ -20,7 +20,7 @@ import com.vrushabhgaikar.vibeplayer.data.local.entity.RecommendedSongEntity
         PlaylistEntity::class,
         PlaylistSongCrossRef::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class VibeDatabase : RoomDatabase() {

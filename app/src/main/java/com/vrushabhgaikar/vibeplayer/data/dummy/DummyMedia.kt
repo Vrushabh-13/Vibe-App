@@ -14,8 +14,6 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         uri = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3".toUri(),
         thumbnailUri = "https://picsum.photos/300/300?random=1".toUri(),
         duration = 240000,
-        playedDuration = 60000,
-        isPlaying = true,
         mediaType = MediaType.AUDIO,
         sourceType = SourceType.ONLINE
     ),
@@ -38,7 +36,6 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         uri = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3".toUri(),
         thumbnailUri = "https://picsum.photos/300/300?random=3".toUri(),
         duration = 250000,
-        isFav = true,
         mediaType = MediaType.AUDIO,
         sourceType = SourceType.ONLINE
     ),
@@ -94,7 +91,6 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         uri = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3".toUri(),
         thumbnailUri = "https://picsum.photos/300/300?random=8".toUri(),
         duration = 280000,
-        isFav = true,
         mediaType = MediaType.AUDIO,
         sourceType = SourceType.ONLINE
     ),
@@ -107,8 +103,7 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         thumbnailUri = "https://picsum.photos/300/300?random=9".toUri(),
         duration = 320000,
         mediaType = MediaType.AUDIO,
-        sourceType = SourceType.ONLINE,
-        playedDuration = 3L
+        sourceType = SourceType.ONLINE
     ),
 
     MediaItemModel(
@@ -119,7 +114,7 @@ val dummyMediaList: List<MediaItemModel> = listOf(
         thumbnailUri = "https://picsum.photos/300/300?random=10".toUri(),
         duration = 15000,
         mediaType = MediaType.VIDEO,
-        sourceType = SourceType.ONLINE,
-        playedDuration = 3L
+        sourceType = SourceType.ONLINE
+
     )
 )

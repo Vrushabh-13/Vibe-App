@@ -7,8 +7,6 @@ import androidx.room.Entity
     primaryKeys = ["playlistName", "mediaId"]
 )
 data class PlaylistSongCrossRef(
-
     val playlistName: String,
-
     val mediaId: Long
 )

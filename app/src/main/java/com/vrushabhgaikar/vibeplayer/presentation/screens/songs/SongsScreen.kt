@@ -2,6 +2,7 @@ package com.vrushabhgaikar.vibeplayer.presentation.screens.songs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -18,6 +20,7 @@ import com.vrushabhgaikar.vibeplayer.R
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaType
 import com.vrushabhgaikar.vibeplayer.domain.model.SourceType
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppEmptyState
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppFilterChips
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppSearchBar
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppSectionTitle
@@ -113,7 +116,14 @@ fun SongsScreen(
         item { VerticalSpacer(16.dp) }
 
 
-
+        if(searchQuery.value.isNotBlank() &&
+            songs.value.isEmpty()){
+            item {
+                AppEmptyState(
+                title = "Not Found",
+                description = "Please Search with proper keyword"
+            ) }
+        }
         items(items = songs.value, key = { it.id!! }) { media ->
             SongListItem(
                 media = media,
@@ -125,8 +135,8 @@ fun SongsScreen(
                     val updated =
                         viewModel.toggleFavorite(media)
                     onMediaUpdated(updated)
-                })
-
+                }
+            )
         }
 
 

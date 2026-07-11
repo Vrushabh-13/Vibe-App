@@ -1,5 +1,6 @@
 package com.vrushabhgaikar.vibeplayer.presentation.screens.home
 
+import PlayerManager
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,9 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
-    application: Application
-) : AndroidViewModel(application) {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = MediaRepositoryImpl(
         MediaStoreReader(application)
     )
@@ -345,7 +344,8 @@ class HomeViewModel(
                             if (history != null) {
 
                                 media.copy(
-                                    playedAt = history.playedAt
+                                    playedAt = history.playedAt,
+                                    playedDuration = history.playedDuration
                                 )
 
                             } else {
@@ -448,7 +448,7 @@ class HomeViewModel(
             if (it.id == media.id) {
                 it.copy(
                     playedAt = System.currentTimeMillis(),
-                    playedDuration = 1000L
+                    playedDuration = PlayerManager.currentPosition()
                 )
             } else {
                 it
@@ -458,9 +458,10 @@ class HomeViewModel(
 
         viewModelScope.launch {
 
-            media.id?.let {
+            media.id?.let {mediaId ->
 
-                historyRepository.addToHistory(it)
+                historyRepository.addToHistory(mediaId = mediaId,
+                    playedDuration = PlayerManager.currentPosition())
             }
         }
     }
@@ -482,6 +483,8 @@ class HomeViewModel(
         _continueListeningList.value =
             _allMediaList.value
                 .filter {
+//                    it.duration > 0L &&
+//                    it.playedDuration >= it.duration * 0.25 &&
                     it.playedDuration > 0L &&
                             it.playedDuration < it.duration
                 }

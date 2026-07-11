@@ -60,6 +60,11 @@ fun VideoPlayerContent(
         if (uiState.duration > 0)
             uiState.currentPosition.toFloat() / uiState.duration.toFloat()
         else 0f
+    val durationText =
+        if (uiState.duration > 0)
+            TimeUtils.formatDuration(uiState.duration)
+        else
+            "Unavailable"
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -202,7 +207,8 @@ fun VideoPlayerContent(
                     Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        text = TimeUtils.formatDuration(uiState.duration),
+//                        text = TimeUtils.formatDuration(uiState.duration),
+                        text = durationText,
                         color = White
                     )
 

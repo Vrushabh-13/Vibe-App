@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -55,6 +56,7 @@ fun LibraryScreen(
     var playlistName by remember { mutableStateOf("") }
     val playlistList =
         viewModel.playlists.collectAsState().value
+    var isError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -196,9 +198,18 @@ fun LibraryScreen(
 
                         OutlinedTextField(
                             value = playlistName,
-                            onValueChange = { playlistName = it },
-                            placeholder = { Text("Playlist name") }
+                            onValueChange = { playlistName = it
+                                           isError = false },
+                            placeholder = { Text("Playlist name") },
+                            isError = isError
+
                         )
+                        if(isError){
+                            Text(
+                                text = "Playlist name cannot be empty",
+                                color = Color.Red
+                            )
+                        }
                     }
                 },
                 confirmButton = {
@@ -206,10 +217,13 @@ fun LibraryScreen(
                         text = "Create",
                         color = White,
                         modifier = Modifier.clickable {
-                            if (playlistName.isNotBlank()) {
-                                viewModel.createPlaylist(playlistName)
+                            if (playlistName.isBlank()) {
+                                isError = true
+                                return@clickable
                             }
+                            viewModel.createPlaylist(playlistName)
                             playlistName = ""
+                            isError = false
                             showDialog = false
                         }
                     )
@@ -220,6 +234,7 @@ fun LibraryScreen(
                         color = White,
                         modifier = Modifier.clickable {
                             playlistName = ""
+                            isError = false
                             showDialog = false
                         }
                     )

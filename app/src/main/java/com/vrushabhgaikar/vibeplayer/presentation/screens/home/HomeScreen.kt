@@ -58,6 +58,7 @@ fun HomeScreen(
         contentPadding = PaddingValues(bottom = 30.dp)
     ) {
 
+
         if (recentlyPlayed.value.isNotEmpty()) {
            item { AppSectionTitle(stringResource(R.string.recently_played)) }
 

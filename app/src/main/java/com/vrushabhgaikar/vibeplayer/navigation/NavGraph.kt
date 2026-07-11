@@ -75,7 +75,8 @@ fun NavGraph(
                 onSongClick = onSongClick,
                 onBack = {
                     navController.popBackStack()
-                }
+                },
+                onMediaUpdated = onMediaUpdated
             )
         }
         composable(Routes.HISTORY) {

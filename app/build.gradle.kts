@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -75,9 +76,12 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation(platform(libs.firebase.bom))
 
-    implementation("com.google.firebase:firebase-messaging")
+    implementation(libs.firebase.messaging)
+
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
 
 
 

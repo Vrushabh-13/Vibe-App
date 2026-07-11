@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vrushabhgaikar.vibeplayer.domain.model.MediaItemModel
+import com.vrushabhgaikar.vibeplayer.presentation.components.AppEmptyState
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppFilterChips
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppSearchBar
 import com.vrushabhgaikar.vibeplayer.presentation.components.AppSectionTitle
@@ -75,8 +76,6 @@ fun VideoScreen(
             item { VerticalSpacer(16.dp) }
         }
 
-
-
         item {
             AppFilterChips(
                 selectedFilter = selectedFilter.value,
@@ -85,7 +84,15 @@ fun VideoScreen(
                 }
             )
         }
-
+        item { VerticalSpacer(16.dp) }
+        if(searchQuery.value.isNotBlank() &&
+            videos.value.isEmpty()){
+            item {
+                AppEmptyState(
+                    title = "Not Found",
+                    description = "Please Search with proper keyword"
+                ) }
+        }
         items(items = videos.value, key = { it.id!! }) { media ->
             AppVideoListItem(
                 media = media,

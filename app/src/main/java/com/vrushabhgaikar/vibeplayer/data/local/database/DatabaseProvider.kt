@@ -14,7 +14,7 @@ object DatabaseProvider {
                 context.applicationContext,
                 VibeDatabase::class.java,
                 "vibe_database"
-            ).fallbackToDestructiveMigration(false)
+            ).fallbackToDestructiveMigration()
                 .build()
 
             INSTANCE = instance
